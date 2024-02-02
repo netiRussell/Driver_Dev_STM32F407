@@ -5,14 +5,19 @@
 	DRV - Driver related
 	DRVF - Driver related function
 	DRVV - Driver related value
+	p - Pointer
 */
 
 #ifndef INC_STM32F407_H_
-	#define INC_STM32F407_H_
-#endif /* INC_STM32F407_H_ */
+#define INC_STM32F407_H_
+#include <stdint.h>
 
 /* General use macros */
 #define __vo volatile
+#define SET 1
+#define RESET 0
+#define ENABLE SET
+#define DISABLE RESET
 
 /* Base addresses of memory */
 #define DRV_FLASH_BASEADDR 0x08000000U
@@ -133,10 +138,9 @@ typedef struct{
 #define DRVV_GPIOD_PCLK_EN ( DRV_RCC->AHB1ENR |= (0x1 << 3) );
 #define DRVV_GPIOE_PCLK_EN ( DRV_RCC->AHB1ENR |= (0x1 << 4) );
 #define DRVV_GPIOF_PCLK_EN ( DRV_RCC->AHB1ENR |= (0x1 << 5) );
-#define DRVV_GPIOF_PCLK_EN ( DRV_RCC->AHB1ENR |= (0x1 << 6) );
-#define DRVV_GPIOG_PCLK_EN ( DRV_RCC->AHB1ENR |= (0x1 << 7) );
-#define DRVV_GPIOH_PCLK_EN ( DRV_RCC->AHB1ENR |= (0x1 << 8) );
-#define DRVV_GPIOI_PCLK_EN ( DRV_RCC->AHB1ENR |= (0x1 << 9) );
+#define DRVV_GPIOG_PCLK_EN ( DRV_RCC->AHB1ENR |= (0x1 << 6) );
+#define DRVV_GPIOH_PCLK_EN ( DRV_RCC->AHB1ENR |= (0x1 << 7) );
+#define DRVV_GPIOI_PCLK_EN ( DRV_RCC->AHB1ENR |= (0x1 << 8) );
 
 
 /* Clock enable macros for I2C */
@@ -171,10 +175,9 @@ typedef struct{
 #define DRVV_GPIOD_PCLK_DI ( DRV_RCC->AHB1ENR &= ~(0x1 << 3) );
 #define DRVV_GPIOE_PCLK_DI ( DRV_RCC->AHB1ENR &= ~(0x1 << 4) );
 #define DRVV_GPIOF_PCLK_DI ( DRV_RCC->AHB1ENR &= ~(0x1 << 5) );
-#define DRVV_GPIOF_PCLK_DI ( DRV_RCC->AHB1ENR &= ~(0x1 << 6) );
-#define DRVV_GPIOG_PCLK_DI ( DRV_RCC->AHB1ENR &= ~(0x1 << 7) );
-#define DRVV_GPIOH_PCLK_DI ( DRV_RCC->AHB1ENR &= ~(0x1 << 8) );
-#define DRVV_GPIOI_PCLK_DI ( DRV_RCC->AHB1ENR &= ~(0x1 << 9) );
+#define DRVV_GPIOG_PCLK_DI ( DRV_RCC->AHB1ENR &= ~(0x1 << 6) );
+#define DRVV_GPIOH_PCLK_DI ( DRV_RCC->AHB1ENR &= ~(0x1 << 7) );
+#define DRVV_GPIOI_PCLK_DI ( DRV_RCC->AHB1ENR &= ~(0x1 << 8) );
 
 
 /* Clock disable macros for I2C */
@@ -200,4 +203,7 @@ typedef struct{
 
 /* Clock disable macros for SYSCFG */
 #define DRVV_SYSCFG_CLK_DI ( DRV_RCC->APB2ENR &= ~(0x1 << 14) );
+
+
+#endif /* INC_STM32F407_H_ */
 
