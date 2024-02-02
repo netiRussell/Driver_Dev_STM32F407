@@ -15,17 +15,23 @@ void GPIO_DeInit(GPIO_RegDef_t *p_GPIOx){
  * Peripheral clock control
  */
 void GPIO_ClkControl(GPIO_RegDef_t *p_GPIOx, uint8_t ControlType){
+	uint8_t bitNumToSet = ((uint32_t)p_GPIOx - (uint32_t)DRV_GPIOA_BASEADDR) / (uint16_t)0x0400;
 
+	if( ControlType == ENABLE ){
+		DRVF_GPIOx_PCLK_EN(bitNumToSet);
+	} else {
+		DRVF_GPIOx_PCLK_DI(bitNumToSet);
+	}
 }
 
 
 // Read and Write
 uint8_t GPIO_ReadInput_Pin(GPIO_RegDef_t *p_GPIOx, uint8_t pinNumber){
-
+	return 0;
 }
 
 uint16_t GPIO_ReadInput_Port(GPIO_RegDef_t *p_GPIOx){
-
+	return 0;
 }
 
 void GPIO_WriteOutput_Pin(GPIO_RegDef_t *p_GPIOx, uint8_t pinNumber, uint8_t data){

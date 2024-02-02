@@ -6,11 +6,11 @@
 |-- GPIO -----------------------------------------------------------------|
 
  /*********************************************************************
- * @fn      		  		- GPIO_Init
+ * @fn						- GPIO_Init
  *
- * @brief          			- Initializes GPIO preirpheral
+ * @brief					- Initializes GPIO preirpheral
  *
- * @param[GPIO_Handle_t]    - Base address of the GPIO handler
+ * @param[GPIO_Handle_t]	- Base address of the GPIO handler
  *
  * @return            		- none
  *
@@ -20,11 +20,11 @@
  
  
  /*********************************************************************
- * @fn      		  		- GPIO_DeInit
+ * @fn						- GPIO_DeInit
  *
- * @brief             		- De-initializes GPIO preirpheral
+ * @brief					- De-initializes GPIO preirpheral
  *
- * @param[GPIO_RegDef_t]    - Base address of the GPIO port
+ * @param[GPIO_RegDef_t]	- Base address of the GPIO port
  *
  * @return            		- none
  *
@@ -34,11 +34,11 @@
  
  
  /*********************************************************************
- * @fn      		  		- GPIO_ClkControl
+ * @fn						- GPIO_ClkControl
  *
- * @brief             		- Enables or disables peripheral clock for the given GPIO port
+ * @brief             		- Enables or disables peripheral clock for the given GPIO port by calculating corresponding bit position in AHB1ENR and setting it to 0x1 
  *
- * @param[GPIO_RegDef_t]    - Base address of the GPIO port
+ * @param[GPIO_RegDef_t]	- Base address of the GPIO port
  * @param[uint8_t]         	- Control type(see notes)
  *
  * @return            		- none
@@ -49,14 +49,28 @@
  
  
  /*********************************************************************
- * @fn      		  		- GPIO_ReadInput_Pin
+ * @fn						- GPIO_ReadInput_Pin
  *
- * @brief             		- Reads an input of the given GPIO port at the provided pin 
+ * @brief					- Reads an input of the given GPIO port at the provided pin 
  *
- * @param[GPIO_RegDef_t]    - Base address of the GPIO port
- * @param[uint8_t]         	- Pin Number to read data of
+ * @param[GPIO_RegDef_t]	- Base address of the GPIO port
+ * @param[uint8_t]			- Pin Number to read data of
  *
- * @return[uint8_t]         - Data at the provided pin (1 or 0);
+ * @return[uint8_t]			- Data at the provided pin (1 or 0);
+ *
+ * @Note					- none
+ *
+ */
+ 
+ 
+ /*********************************************************************
+ * @fn						- GPIO_ReadInput_Port
+ *
+ * @brief					- Reads an input of the given GPIO port at all pins 
+ *
+ * @param[GPIO_RegDef_t]	- Base address of the GPIO port
+ *
+ * @return[uint16_t]		- Data of the GPIO port (of all pins);
  *
  * @Note              		- none
  *
@@ -64,25 +78,11 @@
  
  
  /*********************************************************************
- * @fn      		  		- GPIO_ReadInput_Port
+ * @fn						- GPIO_WriteOutput_Pin
  *
- * @brief             		- Reads an input of the given GPIO port at all pins 
+ * @brief					- Writes given data to the provided pin of the given GPIO port
  *
- * @param[GPIO_RegDef_t]    - Base address of the GPIO port
- *
- * @return[uint16_t]        - Data of the GPIO port (of all pins);
- *
- * @Note              		- none
- *
- */
- 
- 
- /*********************************************************************
- * @fn      		  		- GPIO_WriteOutput_Pin
- *
- * @brief             		- Writes given data to the provided pin of the given GPIO port
- *
- * @param[GPIO_RegDef_t]    - Base address of the GPIO port
+ * @param[GPIO_RegDef_t]	- Base address of the GPIO port
  * @param[uint8_t]         	- Pin Number to write data to
  * @param[uint8_t]         	- Data to be written
  *
@@ -93,12 +93,12 @@
  
  
  /*********************************************************************
- * @fn      		  		- GPIO_WriteOutput_Port
+ * @fn						- GPIO_WriteOutput_Port
  *
- * @brief             		- Writes given data to the given GPIO port
+ * @brief					- Writes given data to the given GPIO port
  *
- * @param[GPIO_RegDef_t]    - Base address of the GPIO port
- * @param[uint16_t]         - Data to be written
+ * @param[GPIO_RegDef_t]	- Base address of the GPIO port
+ * @param[uint16_t]			- Data to be written
  *
  * @return            		- none
  *
@@ -111,7 +111,7 @@
  *
  * @brief             		- Flips value of the provided pin of the given GPIO port
  *
- * @param[GPIO_RegDef_t]    - Base address of the GPIO port
+ * @param[GPIO_RegDef_t]	- Base address of the GPIO port
  * @param[uint8_t]         	- Pin Number to toggle data of
  *
  * @return            		- none
@@ -132,12 +132,12 @@
  * @return            		- none
  *
  * @Note              		- Control type(param) = 0 / DISABLE macro => disable the clock
- *					  		- Control type(param) = 1 / ENABLE macro => enable the clock
+ *							- Control type(param) = 1 / ENABLE macro => enable the clock
  */
  
  
  /*********************************************************************
- * @fn      		  		- GPIO_IrqHandling
+ * @fn						- GPIO_IrqHandling
  *
  * @brief             		- Handles incoming IRQ based on the provided pin number 
  *
