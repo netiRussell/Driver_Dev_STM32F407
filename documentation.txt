@@ -8,7 +8,7 @@
  /*********************************************************************
  * @fn						- GPIO_Init
  *
- * @brief					- Initializes GPIO preirpheral
+ * @brief					- Initializes GPIO preirpheral by utilizing pre-filled by user pinConfig.
  *
  * @param[GPIO_Handle_t]	- Base address of the GPIO handler
  *

@@ -5,6 +5,34 @@
  */
 void GPIO_Init(GPIO_Handle_t *p_GPIOxHandle){
 
+	// 1. Mode
+	if(p_GPIOxHandle->GPIOx_PinConfig.pinMode < 4 ){
+		// non-interrupt mode
+		p_GPIOxHandle->p_GPIOx->MODER &= ~(0b11 << (p_GPIOxHandle->GPIOx_PinConfig.pinNumber*2));
+		p_GPIOxHandle->p_GPIOx->MODER |= p_GPIOxHandle->GPIOx_PinConfig.pinMode << (p_GPIOxHandle->GPIOx_PinConfig.pinNumber*2);
+
+	} else {
+		// interrupt mode
+	}
+
+	// 2. Output Speed
+	p_GPIOxHandle->p_GPIOx->OSPEEDR &= ~(0b11 << (p_GPIOxHandle->GPIOx_PinConfig.pinNumber*2));
+	p_GPIOxHandle->p_GPIOx->OSPEEDR |= p_GPIOxHandle->GPIOx_PinConfig.pinSpeed << (p_GPIOxHandle->GPIOx_PinConfig.pinNumber*2);
+
+	// 3. Pull up Pull down resistor mode
+	p_GPIOxHandle->p_GPIOx->PUPDR &= ~(0b11 << (p_GPIOxHandle->GPIOx_PinConfig.pinNumber*2));
+	p_GPIOxHandle->p_GPIOx->PUPDR |= p_GPIOxHandle->GPIOx_PinConfig.pinPuPdControl << (p_GPIOxHandle->GPIOx_PinConfig.pinNumber*2);
+
+	// 4. Output type
+	p_GPIOxHandle->p_GPIOx->OTYPER &= ~(0b1 << p_GPIOxHandle->GPIOx_PinConfig.pinNumber);
+	p_GPIOxHandle->p_GPIOx->OTYPER |= p_GPIOxHandle->GPIOx_PinConfig.pinOutType << (p_GPIOxHandle->GPIOx_PinConfig.pinNumber);
+
+	// 5. Alternate functionality
+	if(p_GPIOxHandle->GPIOx_PinConfig.pinMode == DRV_GPIO_MODE_ALTFN){
+		uint8_t pinNum = p_GPIOxHandle->GPIOx_PinConfig.pinNumber;
+		p_GPIOxHandle->p_GPIOx->AFR[pinNum / 8] &= ~(0b1111 << ((pinNum % 8) * 4));
+		p_GPIOxHandle->p_GPIOx->AFR[pinNum / 8] |= p_GPIOxHandle->GPIOx_PinConfig.pinAltFModeNum << ((pinNum % 8) * 4);
+	}
 }
 void GPIO_DeInit(GPIO_RegDef_t *p_GPIOx){
 

@@ -7,11 +7,11 @@
 
 typedef struct{
 	uint8_t pinNumber;
-	uint8_t pinMode;
-	uint8_t pinSpeed;
-	uint8_t pinPuPdControl; // Pull up and Pull down resistors control
-	uint8_t pinOutType; //     Output type
-	uint8_t pinAltFMode; //    Alternating function mode
+	uint8_t pinMode;		// (Possible values @GPIO_MODE)
+	uint8_t pinOutType;		// Output type (Possible values @GPIO_OUT_TYPE)
+	uint8_t pinSpeed;		// (Possible values @GPIO_OUT_SPEED)
+	uint8_t pinPuPdControl;	// Pull up and Pull down resistors control (Possible values @GPIO_PULL_UPDOWN)
+	uint8_t pinAltFModeNum;	// Alternating function mode
 
 } GPIO_PinConfig_t;
 
@@ -23,24 +23,69 @@ typedef struct {
 } GPIO_Handle_t;
 
 
-/* APIs supported */
+/*
+ * GPIO pin modes macros ( @GPIO_MODE )
+ */
+#define DRV_GPIO_MODE_IN 		0
+#define DRV_GPIO_MODE_OUT 		1
+#define DRV_GPIO_MODE_ALTFN 	2
+#define DRV_GPIO_MODE_ANALOG 	3
+#define DRV_GPIO_MODE_IT_FT 	4 	// Interrupt for Falling edge
+#define DRV_GPIO_MODE_IT_RT 	5 	// Interrupt for Rising edge
+#define DRV_GPIO_MODE_IT_RFT 	6	// Interrupt for Rising & Falling edges
 
-// Initialization and De-initialization
+
+/*
+ * GPIO output types macros ( @GPIO_OUT_TYPE )
+ */
+#define DRV_GPIO_OUTTYPE_PP 	0		// Push Pull mode
+#define DRV_GPIO_OUTTYPE_OD 	1		// Open Drain mode
+
+
+/*
+ * GPIO output speed level macros ( @GPIO_OUT_SPEED )
+ */
+#define DRV_GPIO_OUTSPEED_LOW		0	// Low speed
+#define DRV_GPIO_OUTSPEED_MED		1	// Medium speed
+#define DRV_GPIO_OUTSPEED_HIGH		2	// High speed
+#define DRV_GPIO_OUTSPEED_VHIGH		3	// Very high speed
+
+
+/*
+ * GPIO internal pull-up pull-down resistors macros ( @GPIO_PULL_UPDOWN )
+ */
+#define DRV_GPIO_PUPDR_NONE		0	// None
+#define DRV_GPIO_PUPDR_UP		1	// Pull up resistor enabled
+#define DRV_GPIO_PUPDR_DOWN		2	// Pull down resistor enabled
+
+
+
+/* ---------------------- APIs supported ---------------------- */
+
+/*
+ * Initialization and De-initialization
+ */
 void GPIO_Init(GPIO_Handle_t *p_GPIOxHandle);
 void GPIO_DeInit(GPIO_RegDef_t *p_GPIOx);
 
-// Peripheral clock control
+/*
+ * Peripheral clock control
+ */
 // ControlType = 1 => enable ; ControlType = 0 => disable
 void GPIO_ClkControl(GPIO_RegDef_t *p_GPIOx, uint8_t ControlType);
 
-// Read and Write
+/*
+ * Read and Write
+ */
 uint8_t GPIO_ReadInput_Pin(GPIO_RegDef_t *p_GPIOx, uint8_t pinNumber);
 uint16_t GPIO_ReadInput_Port(GPIO_RegDef_t *p_GPIOx);
 void GPIO_WriteOutput_Pin(GPIO_RegDef_t *p_GPIOx, uint8_t pinNumber, uint8_t data);
 void GPIO_WriteOutput_Port(GPIO_RegDef_t *p_GPIOx, uint16_t data);
 void GPIO_ToggleOutput_Pin(GPIO_RegDef_t *p_GPIOx, uint8_t pinNumber);
 
-// IRQ configuration and ISR handling
+/*
+ * IRQ configuration and ISR handling
+ */
 void GPIO_IrqConfig(uint8_t IrqNumber, uint8_t IrqPriority, uint8_t ControlType);
 void GPIO_IrqHandling(uint8_t pinNumber);
 
