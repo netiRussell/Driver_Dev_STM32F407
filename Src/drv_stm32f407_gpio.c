@@ -30,12 +30,17 @@ void GPIO_Init(GPIO_Handle_t *p_GPIOxHandle){
 	// 5. Alternate functionality
 	if(p_GPIOxHandle->GPIOx_PinConfig.pinMode == DRV_GPIO_MODE_ALTFN){
 		uint8_t pinNum = p_GPIOxHandle->GPIOx_PinConfig.pinNumber;
+		// AFR[pinNum / 8] used to figure whether to change low or high portions of ALTF
+		// (pinNum % 8) * 4) used to find corresponding bit position for the pin
 		p_GPIOxHandle->p_GPIOx->AFR[pinNum / 8] &= ~(0b1111 << ((pinNum % 8) * 4));
 		p_GPIOxHandle->p_GPIOx->AFR[pinNum / 8] |= p_GPIOxHandle->GPIOx_PinConfig.pinAltFModeNum << ((pinNum % 8) * 4);
 	}
 }
 void GPIO_DeInit(GPIO_RegDef_t *p_GPIOx){
+	uint8_t bitPosition = ((uint32_t)p_GPIOx - (uint32_t)DRV_GPIOA_BASEADDR) / (uint16_t)0x0400;
 
+	DRV_RCC->AHB1RSTR |= 0b1 << bitPosition;
+	DRV_RCC->AHB1RSTR &= ~(0b1 << bitPosition);
 }
 
 
@@ -43,12 +48,12 @@ void GPIO_DeInit(GPIO_RegDef_t *p_GPIOx){
  * Peripheral clock control
  */
 void GPIO_ClkControl(GPIO_RegDef_t *p_GPIOx, uint8_t ControlType){
-	uint8_t bitNumToSet = ((uint32_t)p_GPIOx - (uint32_t)DRV_GPIOA_BASEADDR) / (uint16_t)0x0400;
+	uint8_t bitPosition = ((uint32_t)p_GPIOx - (uint32_t)DRV_GPIOA_BASEADDR) / (uint16_t)0x0400;
 
 	if( ControlType == ENABLE ){
-		DRVF_GPIOx_PCLK_EN(bitNumToSet);
+		DRVF_GPIOx_PCLK_EN(bitPosition);
 	} else {
-		DRVF_GPIOx_PCLK_DI(bitNumToSet);
+		DRVF_GPIOx_PCLK_DI(bitPosition);
 	}
 }
 
