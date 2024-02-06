@@ -2,6 +2,10 @@
 	Made by Ruslan Abdulin
 				with love.
 
+	-------------------------------
+	|--- STM32F407 device file ---|
+	-------------------------------
+
 	DRV - Driver related
 	DRVF - Driver related function
 	DRVV - Driver related value
@@ -28,8 +32,8 @@
 
 /* Base addresses of peripheral buses */
 #define DRV_APB1_BASEADDR 0x40000000U
-#define DRV_APB2_BASEADDR 0x40001000U
-#define DRV_AHB1_BASEADDR 0x40002000U
+#define DRV_APB2_BASEADDR 0x40010000U
+#define DRV_AHB1_BASEADDR 0x40020000U
 #define DRV_AHB2_BASEADDR 0x50000000U
 #define DRV_RCC_BASEADDR  0x40023800U
 
@@ -205,6 +209,10 @@ typedef struct{
 /* Clock disable macros for SYSCFG */
 #define DRVF_SYSCFG_CLK_DI ( DRV_RCC->APB2ENR &= ~(0b1 << 14) );
 
+/*
+ * Drivers
+ */
+#include "drv_stm32f407_gpio.h"
 
 #endif /* INC_STM32F407_H_ */
 

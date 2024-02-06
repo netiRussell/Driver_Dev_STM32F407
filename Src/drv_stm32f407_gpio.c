@@ -58,25 +58,33 @@ void GPIO_ClkControl(GPIO_RegDef_t *p_GPIOx, uint8_t ControlType){
 }
 
 
-// Read and Write
+/*
+ * Read and Write
+ */
 uint8_t GPIO_ReadInput_Pin(GPIO_RegDef_t *p_GPIOx, uint8_t pinNumber){
-	return 0;
+	return (uint8_t)((p_GPIOx->IDR >> pinNumber) & 0b1);
 }
 
 uint16_t GPIO_ReadInput_Port(GPIO_RegDef_t *p_GPIOx){
-	return 0;
+	return (uint16_t) p_GPIOx->IDR;
 }
 
 void GPIO_WriteOutput_Pin(GPIO_RegDef_t *p_GPIOx, uint8_t pinNumber, uint8_t data){
 
+	if(data == SET){
+		p_GPIOx->ODR |= (uint32_t)(0b1 << pinNumber);
+	} else {
+		p_GPIOx->ODR &= ~(uint32_t)(0b1 << pinNumber);
+	}
+
 }
 
 void GPIO_WriteOutput_Port(GPIO_RegDef_t *p_GPIOx, uint16_t data){
-
+	p_GPIOx->ODR = (uint32_t)data;
 }
 
 void GPIO_ToggleOutput_Pin(GPIO_RegDef_t *p_GPIOx, uint8_t pinNumber){
-
+	p_GPIOx->ODR ^= (0b1 << pinNumber);
 }
 
 

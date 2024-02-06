@@ -6,7 +6,7 @@
 
 
 typedef struct{
-	uint8_t pinNumber;
+	uint8_t pinNumber;		// Pin Number of the Port
 	uint8_t pinMode;		// (Possible values @GPIO_MODE)
 	uint8_t pinOutType;		// Output type (Possible values @GPIO_OUT_TYPE)
 	uint8_t pinSpeed;		// (Possible values @GPIO_OUT_SPEED)
