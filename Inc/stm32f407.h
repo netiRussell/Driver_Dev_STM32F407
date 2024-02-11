@@ -95,6 +95,7 @@
 #define DRV_GPIOJ_BASEADDR (DRV_AHB1_BASEADDR + 0x2400U)
 #define DRV_GPIOK_BASEADDR (DRV_AHB1_BASEADDR + 0x2800U)
 
+
 /*
  * IRQ numbers ---------------------------------------------------------
  */

@@ -123,6 +123,29 @@ void GPIO_ToggleOutput_Pin(GPIO_Def_t *p_GPIOx, uint8_t pinNumber){
 /*
  * IRQ configuration and ISR handling
  */
+uint8_t GPIO_getIrqNum(uint8_t pinNumber){
+	switch(pinNumber){
+		case 0:
+			return IRQ_NUM_EXTI0;
+		case 1:
+			return IRQ_NUM_EXTI1;
+		case 2:
+			return IRQ_NUM_EXTI2;
+		case 3:
+			return IRQ_NUM_EXTI3;
+		case 4:
+			return IRQ_NUM_EXTI4;
+		case 5:
+		case 6:
+		case 7:
+		case 8:
+		case 9:
+			return IRQ_NUM_EXTI9_5;
+		default:
+			return IRQ_NUM_EXTI15_10;
+	}
+}
+
 void GPIO_IrqInterruptConfig(uint8_t IrqNumber, uint8_t ControlType){
 
 	// Enable or Disable functionality
@@ -153,6 +176,10 @@ void GPIO_IrqPriorityConfig(uint8_t IrqNumber, uint8_t IrqPriority){
 }
 
 void GPIO_IrqHandling(uint8_t pinNumber){
+
+	if( EXTI->PR & (0b1 << pinNumber ) ){
+		EXTI->PR |= 0b1 << pinNumber; // clear the bit
+	}
 
 }
 

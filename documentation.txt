@@ -58,7 +58,7 @@
  *
  * @brief					- De-initializes GPIO preirpheral
  *
- * @param[GPIO_Def_t]	- Base address of the GPIO port
+ * @param[GPIO_Def_t]		- Base address of the GPIO port
  *
  * @return            		- none
  *
@@ -90,7 +90,7 @@
  * @param[GPIO_Def_t]	- Base address of the GPIO port
  * @param[uint8_t]			- Pin Number to read data of
  *
- * @return[uint8_t]			- Data at the provided pin (1 or 0);
+ * @return[uint8_t]			- Data at the provided pin: 1 or 0 (uint8_t);
  *
  * @Note					- none
  *
@@ -104,7 +104,7 @@
  *
  * @param[GPIO_Def_t]	- Base address of the GPIO port
  *
- * @return[uint16_t]		- Data of the GPIO port (of all pins);
+ * @return[uint16_t]		- Data of the GPIO port of all pins (uint16_t);
  *
  * @Note              		- none
  *
@@ -154,6 +154,20 @@
  */
  
  
+  /*********************************************************************
+ * @fn      		  		- GPIO_getIrqNum
+ *
+ * @brief             		- Returns corresponding to the provided pin IRQ number
+ *
+ * @param[uint8_t]    		- Pin number
+ *
+ * @return            		- IRQ number (uint8_t)
+ *
+ * @Note              		- none
+ *
+ */
+ 
+ 
  /*********************************************************************
  * @fn      		  		- GPIO_IrqInterruptConfig
  *
@@ -187,7 +201,7 @@
  /*********************************************************************
  * @fn						- GPIO_IrqHandling
  *
- * @brief             		- Handles incoming IRQ based on the provided pin number 
+ * @brief             		- Clears the corresponding pending register based on the pin provided
  *
  * @param[uint8_t]    		- Pin number
  *
