@@ -16,12 +16,33 @@
 #define INC_STM32F407_H_
 #include <stdint.h>
 
-/* General use macros */
+
+/*
+ * General use macros ---------------------------------------------------
+ */
 #define __vo volatile
 #define SET 1
 #define RESET 0
 #define ENABLE SET
 #define DISABLE RESET
+#define HIGH SET
+#define LOW RESET
+#define NVIC_NUM_PRIOR_BITS 4
+
+
+/*
+ * Pointers -------------------------------------------------------------
+ */
+
+/* Basic pointers of NVIC registers */
+#define NVIC_ISER	((__vo uint32_t*) 0xE000E100)	// set-enable; ends at 0xE000E11C
+#define NVIC_ICER	((__vo uint32_t*) 0XE000E180)	// clear-enable; ends at 0xE000E19C
+#define NVIC_IPR	((__vo uint32_t*) 0xE000E400)	// priority; ends at 0xE000E4EF
+
+
+/*
+ * Base Addresses -------------------------------------------------------
+ */
 
 /* Base addresses of memory */
 #define DRV_FLASH_BASEADDR 0x08000000U
@@ -38,7 +59,7 @@
 #define DRV_RCC_BASEADDR  0x40023800U
 
 
-/* Base addresses of  APB1 peripherals */
+/* Base addresses of APB1 peripherals */
 #define DRV_SPI2_BASEADDR   (DRV_APB1_BASEADDR + 0x3800U)
 #define DRV_SPI3_BASEADDR   (DRV_APB1_BASEADDR + 0x3C00U)
 #define DRV_USART2_BASEADDR (DRV_APB1_BASEADDR + 0x4800U)
@@ -52,7 +73,7 @@
 #define DRV_I2C3_BASEADDR   (DRV_APB1_BASEADDR + 0x5C00U)
 
 
-/* Base addresses of  APB2 peripherals */
+/* Base addresses of APB2 peripherals */
 #define DRV_USART1_BASEADDR   (DRV_APB2_BASEADDR + 0x1000U)
 #define DRV_USART6_BASEADDR   (DRV_APB2_BASEADDR + 0x1400U)
 #define DRV_SPI1_BASEADDR     (DRV_APB2_BASEADDR + 0x3000U)
@@ -61,7 +82,7 @@
 #define DRV_SYSCFG_BASEADDR   (DRV_APB2_BASEADDR + 0x3800U)
 
 
-/* Base addresses of  AHB1 peripherals */
+/* Base addresses of AHB1 peripherals */
 #define DRV_GPIOA_BASEADDR (DRV_AHB1_BASEADDR)
 #define DRV_GPIOB_BASEADDR (DRV_AHB1_BASEADDR + 0x0400U)
 #define DRV_GPIOC_BASEADDR (DRV_AHB1_BASEADDR + 0x0800U)
@@ -74,6 +95,21 @@
 #define DRV_GPIOJ_BASEADDR (DRV_AHB1_BASEADDR + 0x2400U)
 #define DRV_GPIOK_BASEADDR (DRV_AHB1_BASEADDR + 0x2800U)
 
+/*
+ * IRQ numbers ---------------------------------------------------------
+ */
+#define IRQ_NUM_EXTI0 6
+#define IRQ_NUM_EXTI1 7
+#define IRQ_NUM_EXTI2 8
+#define IRQ_NUM_EXTI3 9
+#define IRQ_NUM_EXTI4 10
+#define IRQ_NUM_EXTI9_5 23
+#define IRQ_NUM_EXTI15_10 40
+
+
+/*
+ * Registers structures ------------------------------------------------
+ */
 
 /* GPIO registers structure */
 typedef struct{
@@ -86,9 +122,7 @@ typedef struct{
 	__vo uint32_t BSRR; //    port bit set reset
 	__vo uint32_t LCKR; //    port configuration lock
 	__vo uint32_t AFR[2]; //    alternate function low and high portions
-} GPIO_RegDef_t;
-
-// GPIO_RegDef_t *DRV_GPIOA_registers = (GPIO_RegDef_t*) DRV_GPIOA_BASEADDR;
+} GPIO_Def_t;
 
 
 
@@ -129,10 +163,41 @@ typedef struct{
 	__vo uint32_t SSCGR; //      spread spectrum clock generation
 	__vo uint32_t PLLI2SCFGR; // PLL I2C clock output configuration
 
-} RCC_RegDef_t;
+} RCC_Def_t;
 
-#define DRV_RCC ((RCC_RegDef_t*) DRV_RCC_BASEADDR)
+#define DRV_RCC ((RCC_Def_t*) DRV_RCC_BASEADDR)
 
+
+/* EXTI registers structure */
+typedef struct{
+	__vo uint32_t IMR; //	Interrupt Mask Register
+	__vo uint32_t EMR; //	Event Mask Register
+	__vo uint32_t RTSR; //	Rising Trigger Selection Register
+	__vo uint32_t FTSR; //	Falling Trigger Selection Register
+	__vo uint32_t SWIER; //	Software Interrupt Event Register
+	__vo uint32_t PR; //	Pending Register
+
+} EXTI_Def_t;
+
+#define EXTI ((EXTI_Def_t*) DRV_EXTI_BASEADDR)
+
+
+/* SYSCFG registers structure */
+typedef struct{
+	__vo uint32_t MEMRMP; //		Memory Remap Register
+	__vo uint32_t PMC; //			Peripheral Mode Configuration Register
+	__vo uint32_t EXTICRx[4]; //	External Interrupt Configuration Registers
+	uint32_t RESERVED1;
+	uint32_t RESERVED2;
+	__vo uint32_t CMPCR; //			Compensation Cell Control Register
+} SYSCFG_Def_t;
+
+#define SYSCFG ((SYSCFG_Def_t*) DRV_SYSCFG_BASEADDR)
+
+
+/*
+ * Enable macros ----------------------------------------------------
+ */
 
 /* Clock enable macros for GPIO */
 #define DRVF_GPIOx_PCLK_EN(bitNumToSet) ( DRV_RCC->AHB1ENR |= 0b1 << bitNumToSet );
@@ -209,8 +274,9 @@ typedef struct{
 /* Clock disable macros for SYSCFG */
 #define DRVF_SYSCFG_CLK_DI ( DRV_RCC->APB2ENR &= ~(0b1 << 14) );
 
+
 /*
- * Drivers
+ * Drivers' header files --------------------------------------------
  */
 #include "drv_stm32f407_gpio.h"
 

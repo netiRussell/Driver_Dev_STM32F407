@@ -5,6 +5,40 @@
 
 |-- GPIO -----------------------------------------------------------------|
 
+// Use logic:
+
+1)	Declare GPIO_Handle_t structure
+
+2)	Create p_GPIOx (structure of a port)from GPIO_Handle_t that is based on a certain base address
+
+	Example: 
+	GPIOA.p_GPIOx = (GPIO_Def_t*) DRV_GPIOA_BASEADDR;
+	
+3)	Configure GPIOx_PinConfig (structure of the pin of the GPIO port)
+
+	Example:
+	GPIOA.GPIOx_PinConfig.pinNumber = 10;
+	GPIOA.GPIOx_PinConfig.pinMode = DRV_GPIO_MODE_OUT;
+	GPIOA.GPIOx_PinConfig.pinOutType = DRV_GPIO_OUTTYPE_PP;
+	GPIOA.GPIOx_PinConfig.pinOutSpeed = DRV_GPIO_OUTSPEED_HIGH;
+	GPIOA.GPIOx_PinConfig.pinPuPdControl = DRV_GPIO_PUPDR_NONE;
+
+4)	Enable the peripheral clock for this port:
+	Example: 
+	GPIO_ClkControl(GPIOB.p_GPIOx, ENABLE);
+	
+5)	Initialize the GPIO_Handle_t (this will apply the settings of the pin to the corresponding registers)
+	Example:
+	GPIO_Init( &GPIOA );
+	
+6)	Feel free to make any change to GPIOx_PinConfig and apply step #5 again to 
+	modify the previous pin's settings or to configure some other pin
+
+// ------------------------------------------------------------------------
+
+
+// Functions: 
+
  /*********************************************************************
  * @fn						- GPIO_Init
  *
@@ -24,7 +58,7 @@
  *
  * @brief					- De-initializes GPIO preirpheral
  *
- * @param[GPIO_RegDef_t]	- Base address of the GPIO port
+ * @param[GPIO_Def_t]	- Base address of the GPIO port
  *
  * @return            		- none
  *
@@ -38,7 +72,7 @@
  *
  * @brief             		- Enables or disables peripheral clock for the given GPIO port by calculating corresponding bit position in AHB1ENR and setting it to 0x1 
  *
- * @param[GPIO_RegDef_t]	- Base address of the GPIO port
+ * @param[GPIO_Def_t]	- Base address of the GPIO port
  * @param[uint8_t]         	- Control type(see notes)
  *
  * @return            		- none
@@ -53,7 +87,7 @@
  *
  * @brief					- Returns the input data of the given GPIO port at the provided pin by shifting the needed bit value all the way to the LSB position and clearing the rest of the bits.
  *
- * @param[GPIO_RegDef_t]	- Base address of the GPIO port
+ * @param[GPIO_Def_t]	- Base address of the GPIO port
  * @param[uint8_t]			- Pin Number to read data of
  *
  * @return[uint8_t]			- Data at the provided pin (1 or 0);
@@ -68,7 +102,7 @@
  *
  * @brief					- Returns the input data of the given GPIO port.
  *
- * @param[GPIO_RegDef_t]	- Base address of the GPIO port
+ * @param[GPIO_Def_t]	- Base address of the GPIO port
  *
  * @return[uint16_t]		- Data of the GPIO port (of all pins);
  *
@@ -82,7 +116,7 @@
  *
  * @brief					- Writes given data to the provided pin of the given GPIO port
  *
- * @param[GPIO_RegDef_t]	- Base address of the GPIO port
+ * @param[GPIO_Def_t]	- Base address of the GPIO port
  * @param[uint8_t]         	- Pin Number to write data to
  * @param[uint8_t]         	- Data to be written
  *
@@ -97,7 +131,7 @@
  *
  * @brief					- Writes given data to the given GPIO port
  *
- * @param[GPIO_RegDef_t]	- Base address of the GPIO port
+ * @param[GPIO_Def_t]	- Base address of the GPIO port
  * @param[uint16_t]			- Data to be written
  *
  * @return            		- none
@@ -111,7 +145,7 @@
  *
  * @brief             		- Flips value of the provided pin of the given GPIO port
  *
- * @param[GPIO_RegDef_t]	- Base address of the GPIO port
+ * @param[GPIO_Def_t]	- Base address of the GPIO port
  * @param[uint8_t]         	- Pin Number to toggle data of
  *
  * @return            		- none
@@ -121,18 +155,32 @@
  
  
  /*********************************************************************
- * @fn      		  		- GPIO_IrqConfig
+ * @fn      		  		- GPIO_IrqInterruptConfig
  *
- * @brief             		- Configures IRQ based on arguments provided
+ * @brief             		- Enables or Disables IRQ number access to processor via NVIC
  *
  * @param[uint8_t]    		- IRQ number
- * @param[uint8_t]         	- IRQ priority
  * @param[uint8_t]         	- Control type (see notes)
  *
  * @return            		- none
  *
  * @Note              		- Control type(param) = 0 / DISABLE macro => disable the clock
  *							- Control type(param) = 1 / ENABLE macro => enable the clock
+ */
+ 
+ 
+  /*********************************************************************
+ * @fn      		  		- GPIO_IrqPriorityConfig
+ *
+ * @brief             		- Configures IRQ priority based on arguments provided
+ *
+ * @param[uint8_t]    		- IRQ number
+ * @param[uint8_t]         	- IRQ priority
+ *
+ * @return            		- none
+ *
+ * @Note              		- IRQ priority consists of 4 bits
+ *
  */
  
  
