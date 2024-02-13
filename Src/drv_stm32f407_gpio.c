@@ -46,17 +46,24 @@ void GPIO_Init(GPIO_Handle_t *p_GPIOxHandle){
 		EXTI->IMR |= 0b1 << pinNumber;
 	}
 
-	// 2. Output Speed
-	p_GPIOxHandle->p_GPIOx->OSPEEDR &= ~(0b11 << (pinNumber*2));
-	p_GPIOxHandle->p_GPIOx->OSPEEDR |= p_GPIOxHandle->GPIOx_PinConfig.pinOutSpeed << (pinNumber*2);
 
-	// 3. Pull up Pull down resistor mode
+	// 2. & 3. as long as the pin is in the Output mode
+	if(p_GPIOxHandle->GPIOx_PinConfig.pinMode == DRV_GPIO_MODE_OUT){
+		// 2. Output Speed
+		p_GPIOxHandle->p_GPIOx->OSPEEDR &= ~(0b11 << (pinNumber * 2));
+		p_GPIOxHandle->p_GPIOx->OSPEEDR |= p_GPIOxHandle->GPIOx_PinConfig.pinOutSpeed << (pinNumber * 2);
+
+		// 3. Output type
+		p_GPIOxHandle->p_GPIOx->OTYPER &= ~(0b1 << pinNumber);
+		p_GPIOxHandle->p_GPIOx->OTYPER |= p_GPIOxHandle->GPIOx_PinConfig.pinOutType << (pinNumber);
+	}
+
+
+	// 4. Pull up Pull down resistor mode
 	p_GPIOxHandle->p_GPIOx->PUPDR &= ~(0b11 << (pinNumber*2));
 	p_GPIOxHandle->p_GPIOx->PUPDR |= p_GPIOxHandle->GPIOx_PinConfig.pinPuPdControl << (pinNumber*2);
 
-	// 4. Output type
-	p_GPIOxHandle->p_GPIOx->OTYPER &= ~(0b1 << pinNumber);
-	p_GPIOxHandle->p_GPIOx->OTYPER |= p_GPIOxHandle->GPIOx_PinConfig.pinOutType << (pinNumber);
+
 
 	// 5. Alternate functionality
 	if(p_GPIOxHandle->GPIOx_PinConfig.pinMode == DRV_GPIO_MODE_ALTFN){
@@ -166,12 +173,12 @@ void GPIO_IrqPriorityConfig(uint8_t IrqNumber, uint8_t IrqPriority){
 	uint32_t registerNumber = IrqNumber / 4; // corresponding number(0-59) for IPR
 	uint8_t validBitsPosition = 8 - NVIC_NUM_PRIOR_BITS;
 
-	// IrqNumber = (# of a field) * # of bits per field + shift to the beginning of valid bits
+	// IrqNumber = (# of a field) * # of bits per field = 8 + shift to the beginning of valid bits = 4
 	IrqNumber = (IrqNumber % 4) * 8 + validBitsPosition; // corresponding bit position
 
 
-	*( NVIC_ISER+(4*registerNumber) ) &= ~(0b1111 << IrqNumber); // clear the bits
-	*( NVIC_ISER+(4*registerNumber) ) |= IrqPriority << IrqNumber; // set the bits
+	*( NVIC_IPR+(registerNumber) ) &= ~(0b1111 << IrqNumber); // clear the bits
+	*( NVIC_IPR+(registerNumber) ) |= (uint32_t)IrqPriority << IrqNumber; // set the bits
 
 }
 
