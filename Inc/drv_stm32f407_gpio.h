@@ -71,7 +71,6 @@ void GPIO_DeInit(GPIO_Def_t *p_GPIOx);
 /*
  * Peripheral clock control
  */
-// ControlType = 1 => enable ; ControlType = 0 => disable
 void GPIO_ClkControl(GPIO_Def_t *p_GPIOx, uint8_t ControlType);
 
 /*

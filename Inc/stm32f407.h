@@ -196,6 +196,24 @@ typedef struct{
 #define SYSCFG ((SYSCFG_Def_t*) DRV_SYSCFG_BASEADDR)
 
 
+typedef struct {
+	uint32_t CR1;		// Control configurations 1
+	uint32_t CR2;		// Control configurations 2
+	uint32_t SR;		// Status
+	uint32_t DR;		// Data
+	uint32_t CRCPR;		// CRC polynomial
+	uint32_t RXCRCR;	// RX (Receiving) buffer CRC
+	uint32_t TXCRCR;	// TX (Sending) buffer CRC
+	uint32_t I2SCFGR;	// I2S protocol configurations
+	uint32_t I2SPR;		// I2S prescaler
+} SPI_Def_t;
+
+#define SPI1 ((SPI_Def_t*)  DRV_SPI1_BASEADDR)
+#define SPI2 ((SPI_Def_t*)  DRV_SPI2_BASEADDR)
+#define SPI3 ((SPI_Def_t*)  DRV_SPI3_BASEADDR)
+#define SPI4 ((SPI_Def_t*)  DRV_SPI4_BASEADDR)
+
+
 /*
  * Enable macros ----------------------------------------------------
  */
@@ -223,6 +241,7 @@ typedef struct{
 #define DRVF_SPI1_CLK_EN ( DRV_RCC->APB2ENR |= (0b1 << 12) );
 #define DRVF_SPI2_CLK_EN ( DRV_RCC->APB1ENR |= (0b1 << 14) );
 #define DRVF_SPI3_CLK_EN ( DRV_RCC->APB1ENR |= (0b1 << 15) );
+#define DRVF_SPI4_CLK_EN ( DRV_RCC->APB2ENR |= (0b1 << 13) );
 
 
 /* Clock enable macros for USART */
@@ -261,6 +280,7 @@ typedef struct{
 #define DRVF_SPI1_CLK_DI ( DRV_RCC->APB2ENR &= ~(0b1 << 12) );
 #define DRVF_SPI2_CLK_DI ( DRV_RCC->APB1ENR &= ~(0b1 << 14) );
 #define DRVF_SPI3_CLK_DI ( DRV_RCC->APB1ENR &= ~(0b1 << 15) );
+#define DRVF_SPI4_CLK_DI ( DRV_RCC->APB2ENR &= ~(0b1 << 13) );
 
 
 /* Clock disable macros for USART */
@@ -274,12 +294,6 @@ typedef struct{
 
 /* Clock disable macros for SYSCFG */
 #define DRVF_SYSCFG_CLK_DI ( DRV_RCC->APB2ENR &= ~(0b1 << 14) );
-
-
-/*
- * Drivers' header files --------------------------------------------
- */
-#include "drv_stm32f407_gpio.h"
 
 #endif /* INC_STM32F407_H_ */
 
