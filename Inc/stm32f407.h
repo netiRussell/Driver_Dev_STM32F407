@@ -219,81 +219,81 @@ typedef struct {
  */
 
 /* Clock enable macros for GPIO */
-#define DRVF_GPIOx_PCLK_EN(bitNumToSet) ( DRV_RCC->AHB1ENR |= 0b1 << bitNumToSet );
-#define DRVF_GPIOA_PCLK_EN ( DRV_RCC->AHB1ENR |= 0b1 );
-#define DRVF_GPIOB_PCLK_EN ( DRV_RCC->AHB1ENR |= (0b1 << 1) );
-#define DRVF_GPIOC_PCLK_EN ( DRV_RCC->AHB1ENR |= (0b1 << 2) );
-#define DRVF_GPIOD_PCLK_EN ( DRV_RCC->AHB1ENR |= (0b1 << 3) );
-#define DRVF_GPIOE_PCLK_EN ( DRV_RCC->AHB1ENR |= (0b1 << 4) );
-#define DRVF_GPIOF_PCLK_EN ( DRV_RCC->AHB1ENR |= (0b1 << 5) );
-#define DRVF_GPIOG_PCLK_EN ( DRV_RCC->AHB1ENR |= (0b1 << 6) );
-#define DRVF_GPIOH_PCLK_EN ( DRV_RCC->AHB1ENR |= (0b1 << 7) );
-#define DRVF_GPIOI_PCLK_EN ( DRV_RCC->AHB1ENR |= (0b1 << 8) );
+#define DRVF_GPIOx_PCLK_EN(bitNumToSet) ( DRV_RCC->AHB1ENR |= 0b1 << bitNumToSet )
+#define DRVF_GPIOA_PCLK_EN ( DRV_RCC->AHB1ENR |= 0b1 )
+#define DRVF_GPIOB_PCLK_EN ( DRV_RCC->AHB1ENR |= (0b1 << 1) )
+#define DRVF_GPIOC_PCLK_EN ( DRV_RCC->AHB1ENR |= (0b1 << 2) )
+#define DRVF_GPIOD_PCLK_EN ( DRV_RCC->AHB1ENR |= (0b1 << 3) )
+#define DRVF_GPIOE_PCLK_EN ( DRV_RCC->AHB1ENR |= (0b1 << 4) )
+#define DRVF_GPIOF_PCLK_EN ( DRV_RCC->AHB1ENR |= (0b1 << 5) )
+#define DRVF_GPIOG_PCLK_EN ( DRV_RCC->AHB1ENR |= (0b1 << 6) )
+#define DRVF_GPIOH_PCLK_EN ( DRV_RCC->AHB1ENR |= (0b1 << 7) )
+#define DRVF_GPIOI_PCLK_EN ( DRV_RCC->AHB1ENR |= (0b1 << 8) )
 
 
 /* Clock enable macros for I2C */
-#define DRVF_I2C1_CLK_EN ( DRV_RCC->APB1ENR |= (0b1 << 21) );
-#define DRVF_I2C2_CLK_EN ( DRV_RCC->APB1ENR |= (0b1 << 22) );
-#define DRVF_I2C3_CLK_EN ( DRV_RCC->APB1ENR |= (0b1 << 23) );
+#define DRVF_I2C1_CLK_EN ( DRV_RCC->APB1ENR |= (0b1 << 21) )
+#define DRVF_I2C2_CLK_EN ( DRV_RCC->APB1ENR |= (0b1 << 22) )
+#define DRVF_I2C3_CLK_EN ( DRV_RCC->APB1ENR |= (0b1 << 23) )
 
 
 /* Clock enable macros for SPI */
-#define DRVF_SPI1_CLK_EN ( DRV_RCC->APB2ENR |= (0b1 << 12) );
-#define DRVF_SPI2_CLK_EN ( DRV_RCC->APB1ENR |= (0b1 << 14) );
-#define DRVF_SPI3_CLK_EN ( DRV_RCC->APB1ENR |= (0b1 << 15) );
-#define DRVF_SPI4_CLK_EN ( DRV_RCC->APB2ENR |= (0b1 << 13) );
+#define DRVF_SPI1_CLK_EN ( DRV_RCC->APB2ENR |= (0b1 << 12) )
+#define DRVF_SPI2_CLK_EN ( DRV_RCC->APB1ENR |= (0b1 << 14) )
+#define DRVF_SPI3_CLK_EN ( DRV_RCC->APB1ENR |= (0b1 << 15) )
+#define DRVF_SPI4_CLK_EN ( DRV_RCC->APB2ENR |= (0b1 << 13) )
 
 
 /* Clock enable macros for USART */
-#define DRVF_USART1_CLK_EN ( DRV_RCC->APB2ENR |= (0b1 << 4) );
-#define DRVF_USART2_CLK_EN ( DRV_RCC->APB1ENR |= (0b1 << 17) );
-#define DRVF_USART3_CLK_EN ( DRV_RCC->APB1ENR |= (0b1 << 18) );
-#define DRVF_UART4_CLK_EN ( DRV_RCC->APB1ENR |= (0b1 << 19) );
-#define DRVF_UART5_CLK_EN ( DRV_RCC->APB1ENR |= (0b1 << 20) );
-#define DRVF_USART6_CLK_EN ( DRV_RCC->APB2ENR |= (0b1 << 5) );
+#define DRVF_USART1_CLK_EN ( DRV_RCC->APB2ENR |= (0b1 << 4) )
+#define DRVF_USART2_CLK_EN ( DRV_RCC->APB1ENR |= (0b1 << 17) )
+#define DRVF_USART3_CLK_EN ( DRV_RCC->APB1ENR |= (0b1 << 18) )
+#define DRVF_UART4_CLK_EN ( DRV_RCC->APB1ENR |= (0b1 << 19) )
+#define DRVF_UART5_CLK_EN ( DRV_RCC->APB1ENR |= (0b1 << 20) )
+#define DRVF_USART6_CLK_EN ( DRV_RCC->APB2ENR |= (0b1 << 5) )
 
 
 /* Clock enable macros for SYSCFG */
-#define DRVF_SYSCFG_CLK_EN ( DRV_RCC->APB2ENR |= (0b1 << 14) );
+#define DRVF_SYSCFG_CLK_EN ( DRV_RCC->APB2ENR |= (0b1 << 14) )
 
 
 /* Clock disable macros for GPIO */
-#define DRVF_GPIOx_PCLK_DI(bitNumToSet) ( DRV_RCC->AHB1ENR &= ~0b1 << bitNumToSet );
-#define DRVF_GPIOA_PCLK_DI ( DRV_RCC->AHB1ENR &= ~0b1 );
-#define DRVF_GPIOB_PCLK_DI ( DRV_RCC->AHB1ENR &= ~(0b1 << 1) );
-#define DRVF_GPIOC_PCLK_DI ( DRV_RCC->AHB1ENR &= ~(0b1 << 2) );
-#define DRVF_GPIOD_PCLK_DI ( DRV_RCC->AHB1ENR &= ~(0b1 << 3) );
-#define DRVF_GPIOE_PCLK_DI ( DRV_RCC->AHB1ENR &= ~(0b1 << 4) );
-#define DRVF_GPIOF_PCLK_DI ( DRV_RCC->AHB1ENR &= ~(0b1 << 5) );
-#define DRVF_GPIOG_PCLK_DI ( DRV_RCC->AHB1ENR &= ~(0b1 << 6) );
-#define DRVF_GPIOH_PCLK_DI ( DRV_RCC->AHB1ENR &= ~(0b1 << 7) );
-#define DRVF_GPIOI_PCLK_DI ( DRV_RCC->AHB1ENR &= ~(0b1 << 8) );
+#define DRVF_GPIOx_PCLK_DI(bitNumToSet) ( DRV_RCC->AHB1ENR &= ~0b1 << bitNumToSet )
+#define DRVF_GPIOA_PCLK_DI ( DRV_RCC->AHB1ENR &= ~0b1 )
+#define DRVF_GPIOB_PCLK_DI ( DRV_RCC->AHB1ENR &= ~(0b1 << 1) )
+#define DRVF_GPIOC_PCLK_DI ( DRV_RCC->AHB1ENR &= ~(0b1 << 2) )
+#define DRVF_GPIOD_PCLK_DI ( DRV_RCC->AHB1ENR &= ~(0b1 << 3) )
+#define DRVF_GPIOE_PCLK_DI ( DRV_RCC->AHB1ENR &= ~(0b1 << 4) )
+#define DRVF_GPIOF_PCLK_DI ( DRV_RCC->AHB1ENR &= ~(0b1 << 5) )
+#define DRVF_GPIOG_PCLK_DI ( DRV_RCC->AHB1ENR &= ~(0b1 << 6) )
+#define DRVF_GPIOH_PCLK_DI ( DRV_RCC->AHB1ENR &= ~(0b1 << 7) )
+#define DRVF_GPIOI_PCLK_DI ( DRV_RCC->AHB1ENR &= ~(0b1 << 8) )
 
 
 /* Clock disable macros for I2C */
-#define DRVF_I2C1_CLK_EN ( DRV_RCC->APB1ENR |= (0b1 << 21) );
-#define DRVF_I2C2_CLK_EN ( DRV_RCC->APB1ENR |= (0b1 << 22) );
-#define DRVF_I2C3_CLK_EN ( DRV_RCC->APB1ENR |= (0b1 << 23) );
+#define DRVF_I2C1_CLK_EN ( DRV_RCC->APB1ENR |= (0b1 << 21) )
+#define DRVF_I2C2_CLK_EN ( DRV_RCC->APB1ENR |= (0b1 << 22) )
+#define DRVF_I2C3_CLK_EN ( DRV_RCC->APB1ENR |= (0b1 << 23) )
 
 
 /* Clock disable macros for SPI */
-#define DRVF_SPI1_CLK_DI ( DRV_RCC->APB2ENR &= ~(0b1 << 12) );
-#define DRVF_SPI2_CLK_DI ( DRV_RCC->APB1ENR &= ~(0b1 << 14) );
-#define DRVF_SPI3_CLK_DI ( DRV_RCC->APB1ENR &= ~(0b1 << 15) );
-#define DRVF_SPI4_CLK_DI ( DRV_RCC->APB2ENR &= ~(0b1 << 13) );
+#define DRVF_SPI1_CLK_DI ( DRV_RCC->APB2ENR &= ~(0b1 << 12) )
+#define DRVF_SPI2_CLK_DI ( DRV_RCC->APB1ENR &= ~(0b1 << 14) )
+#define DRVF_SPI3_CLK_DI ( DRV_RCC->APB1ENR &= ~(0b1 << 15) )
+#define DRVF_SPI4_CLK_DI ( DRV_RCC->APB2ENR &= ~(0b1 << 13) )
 
 
 /* Clock disable macros for USART */
-#define DRVF_USART1_CLK_DI ( DRV_RCC->APB2ENR &= ~(0b1 << 4) );
-#define DRVF_USART2_CLK_DI ( DRV_RCC->APB1ENR &= ~(0b1 << 17) );
-#define DRVF_USART3_CLK_DI ( DRV_RCC->APB1ENR &= ~(0b1 << 18) );
-#define DRVF_UART4_CLK_DI ( DRV_RCC->APB1ENR &= ~(0b1 << 19) );
-#define DRVF_UART5_CLK_DI ( DRV_RCC->APB1ENR &= ~(0b1 << 20) );
-#define DRVF_USART6_CLK_DI ( DRV_RCC->APB2ENR &= ~(0b1 << 5) );
+#define DRVF_USART1_CLK_DI ( DRV_RCC->APB2ENR &= ~(0b1 << 4) )
+#define DRVF_USART2_CLK_DI ( DRV_RCC->APB1ENR &= ~(0b1 << 17) )
+#define DRVF_USART3_CLK_DI ( DRV_RCC->APB1ENR &= ~(0b1 << 18) )
+#define DRVF_UART4_CLK_DI ( DRV_RCC->APB1ENR &= ~(0b1 << 19) )
+#define DRVF_UART5_CLK_DI ( DRV_RCC->APB1ENR &= ~(0b1 << 20) )
+#define DRVF_USART6_CLK_DI ( DRV_RCC->APB2ENR &= ~(0b1 << 5) )
 
 
 /* Clock disable macros for SYSCFG */
-#define DRVF_SYSCFG_CLK_DI ( DRV_RCC->APB2ENR &= ~(0b1 << 14) );
+#define DRVF_SYSCFG_CLK_DI ( DRV_RCC->APB2ENR &= ~(0b1 << 14) )
 
 #endif /* INC_STM32F407_H_ */
 

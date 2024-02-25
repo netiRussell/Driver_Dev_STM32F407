@@ -210,3 +210,61 @@
  * @Note             		- none
  *
  */
+ 
+ 
+ 
+ |-- SPI protocol --------------------------------------------------------|
+
+// Use logic:
+	
+	1) Fill out SPI_Config_t
+	
+	2) ... TO BE CREATED
+
+// ------------------------------------------------------------------------
+
+
+// Functions:
+
+ /*********************************************************************
+ * @fn						- SPI_Init
+ *
+ * @brief					- Initializes SPI preirpheral by utilizing pre-filled by user SPI_Config_t.
+ *
+ * @param[SPI_Handle_t]		- Base address of the SPI handler
+ *
+ * @return            		- none
+ *
+ * @Note              		- none
+ *
+ */
+ 
+ 
+ /*********************************************************************
+ * @fn						- SPI_DeInit
+ *
+ * @brief					- De-initializes SPI preirpheral
+ *
+ * @param[SPI_Def_t]		- Base address of the SPI peripheral
+ *
+ * @return            		- none
+ *
+ * @Note             		- none
+ *
+ */
+ 
+ 
+ /*********************************************************************
+ * @fn						- SPI_ClkControl
+ *
+ * @brief             		- Enables or disables peripheral clock for the given SPI address
+ *
+ * @param[SPI_Def_t]		- Base address of the SPI peripheral
+ * @param[uint8_t]         	- Control type(see notes)
+ *
+ * @return            		- none
+ *
+ * @Note              		- Control type(param) = 0 / DISABLE macro => disable the clock
+ *					  		- Control type(param) = 1 / ENABLE macro => enable the clock
+ *							- Includes only SPI1 through SPI4 preripherals
+ */
