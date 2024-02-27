@@ -235,7 +235,7 @@
  *
  * @return            		- none
  *
- * @Note              		- none
+ * @Note              		- The function assigns a new value to CR1 erasing the current 32-bit value
  *
  */
  
