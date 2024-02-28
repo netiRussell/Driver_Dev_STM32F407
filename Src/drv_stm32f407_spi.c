@@ -6,6 +6,9 @@
  */
 void SPI_Init(SPI_Handle_t *p_SPI_Handle_t){
 
+	// Enable the corresponding peripheral clock
+	SPI_ClkControl(p_SPI_Handle_t->p_SPI_struct, ENABLE);
+
 	uint32_t newCR1 = 0b0;
 
 	// Set device's role

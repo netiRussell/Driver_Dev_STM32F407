@@ -5,6 +5,9 @@
  */
 void GPIO_Init(GPIO_Handle_t *p_GPIOxHandle){
 
+	// Enable the corresponding peripheral clock
+	GPIO_ClkControl(p_GPIOxHandle->p_GPIOx, ENABLE);
+
 	uint8_t pinNumber = p_GPIOxHandle->GPIOx_PinConfig.pinNumber;
 
 	// 1. Mode
