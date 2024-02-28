@@ -22,51 +22,51 @@ typedef struct {
 /*
  * Device modes (@SPI_DeviceMode)
  */
-#define SPI_DEVICE_MODE_SLAVE	0
-#define SPI_DEVICE_MODE_MASTER	1
+#define DRV_SPI_DEVICE_MODE_SLAVE	0
+#define DRV_SPI_DEVICE_MODE_MASTER	1
 
 /*
  * Bus configurations (@SPI_BusConfig)
  */
-#define SPI_BUS_CONFIG_FD		0b00 // Full duplex
-#define SPI_BUS_CONFIG_HD		0b01 // Half duplex
-#define SPI_BUS_CONFIG_RXONLY	0b10 // Simplex with RX only
+#define DRV_SPI_BUS_CONFIG_FD		0b00 // Full duplex
+#define DRV_SPI_BUS_CONFIG_HD		0b01 // Half duplex
+#define DRV_SPI_BUS_CONFIG_RXONLY	0b10 // Simplex with RX only
 
 /*
  * SPI clock speed (@SPI_SclkSpeed)
  */
-#define SPI_SCLK_SPEED_DIV2		0b000
-#define SPI_SCLK_SPEED_DIV4		0b001
-#define SPI_SCLK_SPEED_DIV8		0b010
-#define SPI_SCLK_SPEED_DIV16	0b011
-#define SPI_SCLK_SPEED_DIV32	0b100
-#define SPI_SCLK_SPEED_DIV64	0b101
-#define SPI_SCLK_SPEED_DIV128	0b110
-#define SPI_SCLK_SPEED_DIV256	0b111
+#define DRV_SPI_SCLK_SPEED_DIV2		0b000
+#define DRV_SPI_SCLK_SPEED_DIV4		0b001
+#define DRV_SPI_SCLK_SPEED_DIV8		0b010
+#define DRV_SPI_SCLK_SPEED_DIV16	0b011
+#define DRV_SPI_SCLK_SPEED_DIV32	0b100
+#define DRV_SPI_SCLK_SPEED_DIV64	0b101
+#define DRV_SPI_SCLK_SPEED_DIV128	0b110
+#define DRV_SPI_SCLK_SPEED_DIV256	0b111
 
 /*
  * Data Frame Format (@SPI_DFF)
  */
-#define SPI_DFF_8BITS	0
-#define SPI_DFF_16BITS	1
+#define DRV_SPI_DFF_8BITS	0
+#define DRV_SPI_DFF_16BITS	1
 
 /*
  * CPOL (@SPI_CPOL)
  */
-#define SPI_CPOL_LOW 0
-#define SPI_CPOL_HIGH 1
+#define DRV_SPI_CPOL_LOW 0
+#define DRV_SPI_CPOL_HIGH 1
 
 /*
  * CPHA (SPI_CPHA)
  */
-#define SPI_CPHA_FIRST	0
-#define SPI_CPHA_SECOND	1
+#define DRV_SPI_CPHA_FIRST	0
+#define DRV_SPI_CPHA_SECOND	1
 
 /*
  * Software Slave Management (SPI_CPHA)
  */
-#define SPI_SSM_DISABLE	0
-#define SPI_SSM_ENABLE	1
+#define DRV_SPI_SSM_DISABLE	0
+#define DRV_SPI_SSM_ENABLE	1
 
 /* ---------------------- APIs supported ---------------------- */
 
@@ -82,10 +82,15 @@ void SPI_DeInit(SPI_Def_t *p_SPI_struct);
 void SPI_ClkControl(SPI_Def_t *p_SPI_struct, uint8_t ControlType);
 
 /*
+ * Get value of some SPI status at a bit position from SPI_SR register
+ */
+uint8_t SPI_SR_Status( SPI_Def_t *p_SPI_struct, uint8_t bitPosition);
+
+/*
  * Data Sending and Receiving
  */
-void SPI_SendData( SPI_Def_t *p_SPI_struct, uint8_t p_TxBuffer, uint32_t length );
-void SPI_ReceiveData( SPI_Def_t *p_SPI_struct, uint8_t p_RxBuffer, uint32_t length );
+void SPI_SendData( SPI_Def_t *p_SPI_struct, uint8_t *p_TxBuffer, uint32_t length );
+void SPI_ReceiveData( SPI_Def_t *p_SPI_struct, uint8_t *p_RxBuffer, uint32_t length );
 
 /*
  * IRQ configuration and ISR handling

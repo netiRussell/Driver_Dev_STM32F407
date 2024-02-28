@@ -268,3 +268,20 @@
  *					  		- Control type(param) = 1 / ENABLE macro => enable the clock
  *							- Includes only SPI1 through SPI4 preripherals
  */
+ 
+ 
+ /*********************************************************************
+ * @fn						- SPI_SR_Status
+ *
+ * @brief					- Returns value at a specific bit position from SPI_SR register
+ *
+ * @param[SPI_Def_t]		- Base address of the SPI peripheral
+ * @param[uint8_t]			- Bit position to be checked
+ *
+ * @return            		- value at the bit position = 0 or 1 (uint8_t)
+ *
+ * @Note             		- none
+ *
+ */
+ 
+ 

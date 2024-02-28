@@ -133,23 +133,23 @@ void GPIO_ToggleOutput_Pin(GPIO_Def_t *p_GPIOx, uint8_t pinNumber){
 uint8_t GPIO_getIrqNum(uint8_t pinNumber){
 	switch(pinNumber){
 		case 0:
-			return IRQ_NUM_EXTI0;
+			return DRV_IRQ_NUM_EXTI0;
 		case 1:
-			return IRQ_NUM_EXTI1;
+			return DRV_IRQ_NUM_EXTI1;
 		case 2:
-			return IRQ_NUM_EXTI2;
+			return DRV_IRQ_NUM_EXTI2;
 		case 3:
-			return IRQ_NUM_EXTI3;
+			return DRV_IRQ_NUM_EXTI3;
 		case 4:
-			return IRQ_NUM_EXTI4;
+			return DRV_IRQ_NUM_EXTI4;
 		case 5:
 		case 6:
 		case 7:
 		case 8:
 		case 9:
-			return IRQ_NUM_EXTI9_5;
+			return DRV_IRQ_NUM_EXTI9_5;
 		default:
-			return IRQ_NUM_EXTI15_10;
+			return DRV_IRQ_NUM_EXTI15_10;
 	}
 }
 
@@ -160,9 +160,9 @@ void GPIO_IrqInterruptConfig(uint8_t IrqNumber, uint8_t ControlType){
 	IrqNumber = IrqNumber % 32; // corresponding bit position
 
 	if(ControlType == ENABLE){
-		*( NVIC_ISER+(4*registerNumber) ) |= 0b1 << IrqNumber;
+		*( DRV_NVIC_ISER+(4*registerNumber) ) |= 0b1 << IrqNumber;
 	} else{
-		*( NVIC_ICER+(4*registerNumber) ) |= 0b1 << IrqNumber;
+		*( DRV_NVIC_ICER+(4*registerNumber) ) |= 0b1 << IrqNumber;
 	}
 
 }
@@ -177,8 +177,8 @@ void GPIO_IrqPriorityConfig(uint8_t IrqNumber, uint8_t IrqPriority){
 	IrqNumber = (IrqNumber % 4) * 8 + validBitsPosition; // corresponding bit position
 
 
-	*( NVIC_IPR+(registerNumber) ) &= ~(0b1111 << IrqNumber); // clear the bits
-	*( NVIC_IPR+(registerNumber) ) |= (uint32_t)IrqPriority << IrqNumber; // set the bits
+	*( DRV_NVIC_IPR+(registerNumber) ) &= ~(0b1111 << IrqNumber); // clear the bits
+	*( DRV_NVIC_IPR+(registerNumber) ) |= (uint32_t)IrqPriority << IrqNumber; // set the bits
 
 }
 

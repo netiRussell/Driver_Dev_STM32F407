@@ -9,31 +9,31 @@ void SPI_Init(SPI_Handle_t *p_SPI_Handle_t){
 	uint32_t newCR1 = 0b0;
 
 	// Set device's role
-	newCR1 |= (p_SPI_Handle_t->SPI_Config.DeviceMode << BITPOS_SPI_CR1_MSTR);
+	newCR1 |= (p_SPI_Handle_t->SPI_Config.DeviceMode << DRV_BITPOS_SPI_CR1_MSTR);
 
 	// Set SPI protocol mode( FD doesn't require any actions )
-	if( p_SPI_Handle_t->SPI_Config.BusConfig == SPI_BUS_CONFIG_HD ){
+	if( p_SPI_Handle_t->SPI_Config.BusConfig == DRV_SPI_BUS_CONFIG_HD ){
 		// Half Duplex
-		newCR1 |= (0b1 << BITPOS_SPI_CR1_BIDIMODE);	// BIDIMODE set
-	} else if( p_SPI_Handle_t->SPI_Config.BusConfig == SPI_BUS_CONFIG_RXONLY ){
+		newCR1 |= (0b1 << DRV_BITPOS_SPI_CR1_BIDIMODE);	// BIDIMODE set
+	} else if( p_SPI_Handle_t->SPI_Config.BusConfig == DRV_SPI_BUS_CONFIG_RXONLY ){
 		// Simplex
-		newCR1 |= (0b1 << BITPOS_SPI_CR1_RXONLY);	// RXONLY set while BIDIMODE is cleared
+		newCR1 |= (0b1 << DRV_BITPOS_SPI_CR1_RXONLY);	// RXONLY set while BIDIMODE is cleared
 	}
 
 	// Set Baud Rate
-	newCR1 |= (p_SPI_Handle_t->SPI_Config.SclkSpeed << BITPOS_SPI_CR1_BR);
+	newCR1 |= (p_SPI_Handle_t->SPI_Config.SclkSpeed << DRV_BITPOS_SPI_CR1_BR);
 
 	// Set Data Frame Format (Shift reg. = 8 or 16 bits)
-	newCR1 |= (p_SPI_Handle_t->SPI_Config.DFF << BITPOS_SPI_CR1_DFF);
+	newCR1 |= (p_SPI_Handle_t->SPI_Config.DFF << DRV_BITPOS_SPI_CR1_DFF);
 
 	// Set CPOL
-	newCR1 |= (p_SPI_Handle_t->SPI_Config.CPOL << BITPOS_SPI_CR1_CPOL);
+	newCR1 |= (p_SPI_Handle_t->SPI_Config.CPOL << DRV_BITPOS_SPI_CR1_CPOL);
 
 	// Set CPHA
-	newCR1 |= (p_SPI_Handle_t->SPI_Config.CPHA << BITPOS_SPI_CR1_CPHA);
+	newCR1 |= (p_SPI_Handle_t->SPI_Config.CPHA << DRV_BITPOS_SPI_CR1_CPHA);
 
 	// Set SSM
-	newCR1 |= (p_SPI_Handle_t->SPI_Config.SSM << BITPOS_SPI_CR1_SSM);
+	newCR1 |= (p_SPI_Handle_t->SPI_Config.SSM << DRV_BITPOS_SPI_CR1_SSM);
 
 
 	p_SPI_Handle_t->p_SPI_struct->CR1 = newCR1;
@@ -77,14 +77,42 @@ void SPI_ClkControl(SPI_Def_t *p_SPI_struct, uint8_t ControlType){
 	}
 }
 
+
+/*
+ * Get bit-position status
+ */
+uint8_t SPI_SR_Status( SPI_Def_t *p_SPI_struct, uint8_t bitPosition){
+	if(p_SPI_struct->SR >> bitPosition & 0b1){
+		return HIGH;
+	}
+
+	return LOW;
+}
+
 /*
  * Data Sending and Receiving
  */
-void SPI_SendData( SPI_Def_t *p_SPI_struct, uint8_t p_TxBuffer, uint32_t length ){
+void SPI_SendData( SPI_Def_t *p_SPI_struct, uint8_t *p_TxBuffer, uint32_t length ){
+
+	while (length > 0) {
+		// Wait until TX buffer becomes empty
+		while (!SPI_SR_Status(p_SPI_struct, DRV_BITPOS_SPI_SR_TXE)); // ! SUBSTITUTE WITH INTERRUPT
+
+		if (SPI_SR_Status(p_SPI_struct, DRV_BITPOS_SPI_CR1_DFF)) {
+			//16 bits DFF
+			p_SPI_struct->DR = *((uint16_t*) p_TxBuffer);
+			length -= 2;
+			(uint16_t*) p_TxBuffer++;
+		} else {
+			//8 bits DFF
+			p_SPI_struct->DR = *(p_TxBuffer);
+			length--;
+		}
+	}
 
 }
 
-void SPI_ReceiveData( SPI_Def_t *p_SPI_struct, uint8_t p_RxBuffer, uint32_t length ){
+void SPI_ReceiveData( SPI_Def_t *p_SPI_struct, uint8_t *p_RxBuffer, uint32_t length ){
 
 }
 

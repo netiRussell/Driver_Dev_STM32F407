@@ -35,9 +35,9 @@
  */
 
 /* Basic pointers of NVIC registers */
-#define NVIC_ISER	((__vo uint32_t*) 0xE000E100)	// set-enable; ends at 0xE000E11C
-#define NVIC_ICER	((__vo uint32_t*) 0XE000E180)	// clear-enable; ends at 0xE000E19C
-#define NVIC_IPR	((__vo uint32_t*) 0xE000E400)	// priority; ends at 0xE000E4EF
+#define DRV_NVIC_ISER	((__vo uint32_t*) 0xE000E100)	// set-enable; ends at 0xE000E11C
+#define DRV_NVIC_ICER	((__vo uint32_t*) 0XE000E180)	// clear-enable; ends at 0xE000E19C
+#define DRV_NVIC_IPR	((__vo uint32_t*) 0xE000E400)	// priority; ends at 0xE000E4EF
 
 
 /*
@@ -99,58 +99,58 @@
 /*
  * IRQ numbers ---------------------------------------------------------
  */
-#define IRQ_NUM_EXTI0 6
-#define IRQ_NUM_EXTI1 7
-#define IRQ_NUM_EXTI2 8
-#define IRQ_NUM_EXTI3 9
-#define IRQ_NUM_EXTI4 10
-#define IRQ_NUM_EXTI9_5 23
-#define IRQ_NUM_EXTI15_10 40
+#define DRV_IRQ_NUM_EXTI0 6
+#define DRV_IRQ_NUM_EXTI1 7
+#define DRV_IRQ_NUM_EXTI2 8
+#define DRV_IRQ_NUM_EXTI3 9
+#define DRV_IRQ_NUM_EXTI4 10
+#define DRV_IRQ_NUM_EXTI9_5 23
+#define DRV_IRQ_NUM_EXTI15_10 40
 
 
 /*
  * Bit-position macros for CR1 register of SPI -------------------------
  */
-#define BITPOS_SPI_CR1_BIDIMODE		15
-#define BITPOS_SPI_CR1_BIDIOE		14
-#define BITPOS_SPI_CR1_CRCEN		13
-#define BITPOS_SPI_CR1_CRCNEXT		12
-#define BITPOS_SPI_CR1_DFF			11
-#define BITPOS_SPI_CR1_RXONLY		10
-#define BITPOS_SPI_CR1_SSM			9
-#define BITPOS_SPI_CR1_SSI			8
-#define BITPOS_SPI_CR1_LSBFIRST		7
-#define BITPOS_SPI_CR1_SPE			6
-#define BITPOS_SPI_CR1_BR			3
-#define BITPOS_SPI_CR1_MSTR			2
-#define BITPOS_SPI_CR1_CPOL			1
-#define BITPOS_SPI_CR1_CPHA			0
+#define DRV_BITPOS_SPI_CR1_BIDIMODE		15
+#define DRV_BITPOS_SPI_CR1_BIDIOE		14
+#define DRV_BITPOS_SPI_CR1_CRCEN		13
+#define DRV_BITPOS_SPI_CR1_CRCNEXT		12
+#define DRV_BITPOS_SPI_CR1_DFF			11
+#define DRV_BITPOS_SPI_CR1_RXONLY		10
+#define DRV_BITPOS_SPI_CR1_SSM			9
+#define DRV_BITPOS_SPI_CR1_SSI			8
+#define DRV_BITPOS_SPI_CR1_LSBFIRST		7
+#define DRV_BITPOS_SPI_CR1_SPE			6
+#define DRV_BITPOS_SPI_CR1_BR			3
+#define DRV_BITPOS_SPI_CR1_MSTR			2
+#define DRV_BITPOS_SPI_CR1_CPOL			1
+#define DRV_BITPOS_SPI_CR1_CPHA			0
 
 
 /*
  * Bit-position macros for CR2 register of SPI -------------------------
  */
-#define BITPOS_SPI_CR2_TXEIE			7
-#define BITPOS_SPI_CR2_RXNEIE			6
-#define BITPOS_SPI_CR2_ERRIE			5
-#define BITPOS_SPI_CR2_FRF				4
-#define BITPOS_SPI_CR2_SSOE				2
-#define BITPOS_SPI_CR2_TXDMAEN			1
-#define BITPOS_SPI_CR2_RXDMAEN			0
+#define DRV_BITPOS_SPI_CR2_TXEIE			7
+#define DRV_BITPOS_SPI_CR2_RXNEIE			6
+#define DRV_BITPOS_SPI_CR2_ERRIE			5
+#define DRV_BITPOS_SPI_CR2_FRF				4
+#define DRV_BITPOS_SPI_CR2_SSOE				2
+#define DRV_BITPOS_SPI_CR2_TXDMAEN			1
+#define DRV_BITPOS_SPI_CR2_RXDMAEN			0
 
 
 /*
  * Bit-position macros for SR register of SPI -------------------------
  */
-#define BITPOS_SPI_SR_FRE			8
-#define BITPOS_SPI_SR_BSY			7
-#define BITPOS_SPI_SR_OVR			6
-#define BITPOS_SPI_SR_MODF			5
-#define BITPOS_SPI_SR_CRCERR		4
-#define BITPOS_SPI_SR_UDR			3
-#define BITPOS_SPI_SR_CHSIDE		2
-#define BITPOS_SPI_SR_TXE			1
-#define BITPOS_SPI_SR_RXNE			0
+#define DRV_BITPOS_SPI_SR_FRE			8
+#define DRV_BITPOS_SPI_SR_BSY			7
+#define DRV_BITPOS_SPI_SR_OVR			6
+#define DRV_BITPOS_SPI_SR_MODF			5
+#define DRV_BITPOS_SPI_SR_CRCERR		4
+#define DRV_BITPOS_SPI_SR_UDR			3
+#define DRV_BITPOS_SPI_SR_CHSIDE		2
+#define DRV_BITPOS_SPI_SR_TXE			1
+#define DRV_BITPOS_SPI_SR_RXNE			0
 
 
 /*
