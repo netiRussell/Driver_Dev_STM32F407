@@ -220,6 +220,9 @@
 	1) Fill out SPI_Config_t
 	
 	2) ... TO BE CREATED
+	
+	SSI - stores value that will overwrite the value of NSS pin as long as SSM = 1
+	SSOE - enables or disables NSS output
 
 // ------------------------------------------------------------------------
 
@@ -281,6 +284,53 @@
  * @return            		- value at the bit position = 0 or 1 (uint8_t)
  *
  * @Note             		- none
+ *
+ */
+ 
+ 
+ /*********************************************************************
+ * @fn						- SPI_PeripheralControl
+ *
+ * @brief					- Enables or Disables the SPI peripheral by changing bit-value of SPI_CR1 at SPE
+ *
+ * @param[SPI_Def_t]		- Base address of the SPI peripheral
+ * @param[uint8_t]			- Control type (ENABLE or DISABLE)
+ *
+ * @return            		- none
+ *
+ * @Note             		- ControlType = 1 = ENABLE; ControlType = 0 = DISABLE
+ *							- SPI peripheral doesn't work without SPI_CR1 at SPE bit = 1
+ *
+ */
+ 
+ 
+ /*********************************************************************
+ * @fn						- SPI_SSIControl
+ *
+ * @brief					- Enables or Disables the SSI of the MCU by changing bit-value of SPI_CR1 at SSI
+ *
+ * @param[SPI_Def_t]		- Base address of the SPI peripheral
+ * @param[uint8_t]			- Control type (ENABLE or DISABLE)
+ *
+ * @return            		- none
+ *
+ * @Note             		- ControlType = 1 = ENABLE; ControlType = 0 = DISABLE
+ *							- SSI - stores value that will overwrite the value of NSS pin as long as SSM = 1
+ *
+ */
+ 
+ /*********************************************************************
+ * @fn						- SPI_SSOEControl
+ *
+ * @brief					- Enables or Disables the SSOE of the MCU by changing bit-value of SPI_CR2 at SSOE
+ *
+ * @param[SPI_Def_t]		- Base address of the SPI peripheral
+ * @param[uint8_t]			- Control type (ENABLE or DISABLE)
+ *
+ * @return            		- none
+ *
+ * @Note             		- ControlType = 1 = ENABLE; ControlType = 0 = DISABLE
+ *							- SSOE - enables or disables NSS output
  *
  */
  

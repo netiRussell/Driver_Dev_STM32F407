@@ -9,6 +9,9 @@ void SPI_Init(SPI_Handle_t *p_SPI_Handle_t){
 	// Enable the corresponding peripheral clock
 	SPI_ClkControl(p_SPI_Handle_t->p_SPI_struct, ENABLE);
 
+	// Disable the SPI peripheral
+	//SPI_PeripheralControl(p_SPI_Handle_t->p_SPI_struct, DISABLE);
+
 	uint32_t newCR1 = 0b0;
 
 	// Set device's role
@@ -39,7 +42,11 @@ void SPI_Init(SPI_Handle_t *p_SPI_Handle_t){
 	newCR1 |= (p_SPI_Handle_t->SPI_Config.SSM << DRV_BITPOS_SPI_CR1_SSM);
 
 
+	// Apply the configurations
 	p_SPI_Handle_t->p_SPI_struct->CR1 = newCR1;
+
+	// Enable the SPI peripheral
+	//SPI_PeripheralControl(p_SPI_Handle_t->p_SPI_struct, ENABLE);
 }
 
 
@@ -110,6 +117,7 @@ void SPI_SendData( SPI_Def_t *p_SPI_struct, uint8_t *p_TxBuffer, uint32_t length
 			//8 bits DFF
 			p_SPI_struct->DR = *(p_TxBuffer);
 			length--;
+			p_TxBuffer++;
 		}
 	}
 
@@ -119,6 +127,38 @@ void SPI_ReceiveData( SPI_Def_t *p_SPI_struct, uint8_t *p_RxBuffer, uint32_t len
 
 }
 
+/*
+ * Enable or Disable SPI peripheral
+ */
+void SPI_PeripheralControl( SPI_Def_t *p_SPI_struct, uint8_t ControlType ){
+	if( ControlType == ENABLE ){
+		p_SPI_struct->CR1 |= (0b1 << DRV_BITPOS_SPI_CR1_SPE);
+	} else {
+		p_SPI_struct->CR1 &= ~(0b1 << DRV_BITPOS_SPI_CR1_SPE);
+	}
+}
+
+/*
+ * SSI(value that overwrites NSS pin's value) control
+ */
+void SPI_SSIControl( SPI_Def_t *p_SPI_struct, uint8_t ControlType ){
+	if( ControlType == ENABLE ){
+		p_SPI_struct->CR1 |= (0b1 << DRV_BITPOS_SPI_CR1_SSI);
+	} else {
+		p_SPI_struct->CR1 &= ~(0b1 << DRV_BITPOS_SPI_CR1_SSI);
+	}
+}
+
+/*
+ * SSOE(enables or disables NSS output) control
+ */
+void SPI_SSOEControl( SPI_Def_t *p_SPI_struct, uint8_t ControlType ){
+	if( ControlType == ENABLE ){
+		p_SPI_struct->CR2 |= (0b1 << DRV_BITPOS_SPI_CR2_SSOE);
+	} else {
+		p_SPI_struct->CR2 &= ~(0b1 << DRV_BITPOS_SPI_CR2_SSOE);
+	}
+}
 
 /*
  * IRQ configuration and ISR handling

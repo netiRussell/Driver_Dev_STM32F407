@@ -93,6 +93,21 @@ void SPI_SendData( SPI_Def_t *p_SPI_struct, uint8_t *p_TxBuffer, uint32_t length
 void SPI_ReceiveData( SPI_Def_t *p_SPI_struct, uint8_t *p_RxBuffer, uint32_t length );
 
 /*
+ * Enable or Disable SPI peripheral
+ */
+void SPI_PeripheralControl( SPI_Def_t *p_SPI_struct, uint8_t ControlType );
+
+/*
+ * SSI(value that overwrites NSS pin's value) control
+ */
+void SPI_SSIControl( SPI_Def_t *p_SPI_struct, uint8_t ControlType );
+
+/*
+ * SSOE(enables or disables NSS output) control
+ */
+void SPI_SSOEControl( SPI_Def_t *p_SPI_struct, uint8_t ControlType );
+
+/*
  * IRQ configuration and ISR handling
  */
 uint8_t SPI_getIrqNum(uint8_t pinNumber);
