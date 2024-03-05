@@ -92,7 +92,7 @@ void SPI_ClkControl(SPI_Def_t *p_SPI_struct, uint8_t ControlType){
  * Get bit-position status
  */
 uint8_t SPI_SR_Status( SPI_Def_t *p_SPI_struct, uint8_t bitPosition){
-	if(p_SPI_struct->SR >> bitPosition & 0b1){
+	if((p_SPI_struct->SR >> bitPosition) & 0b1){
 		return HIGH;
 	}
 
@@ -124,6 +124,25 @@ void SPI_SendData( SPI_Def_t *p_SPI_struct, uint8_t *p_TxBuffer, uint32_t length
 }
 
 void SPI_ReceiveData( SPI_Def_t *p_SPI_struct, uint8_t *p_RxBuffer, uint32_t length ){
+
+	while( length > 0){
+
+		// Wait until Rx buffer becomes non-empty
+		while( !SPI_SR_Status(p_SPI_struct, DRV_BITPOS_SPI_SR_RXNE) );
+
+		if (SPI_SR_Status(p_SPI_struct, DRV_BITPOS_SPI_CR1_DFF)) {
+			//16 bits DFF
+			*((uint16_t*)p_RxBuffer) = p_SPI_struct->DR;
+			length -= 2;
+			(uint16_t*) p_RxBuffer++;
+		} else {
+			//8 bits DFF
+			*(p_RxBuffer) = p_SPI_struct->DR;
+			length--;
+			p_RxBuffer++;
+		}
+
+	}
 
 }
 
