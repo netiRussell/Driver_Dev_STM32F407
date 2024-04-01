@@ -16,6 +16,11 @@ typedef struct {
 typedef struct {
 	SPI_Def_t *p_SPI_struct;
 	SPI_Config_t SPI_Config;
+	uint8_t *p_TxBuffer;
+	uint8_t *p_RxBuffer;
+	uint32_t TxLen;
+	uint32_t RxLen;
+	uint8_t State;
 } SPI_Handle_t;
 
 
@@ -57,16 +62,23 @@ typedef struct {
 #define DRV_SPI_CPOL_HIGH 1
 
 /*
- * CPHA (SPI_CPHA)
+ * CPHA (@SPI_CPHA)
  */
 #define DRV_SPI_CPHA_FIRST	0
 #define DRV_SPI_CPHA_SECOND	1
 
 /*
- * Software Slave Management (SPI_CPHA)
+ * Software Slave Management (@SPI_SSM)
  */
 #define DRV_SPI_SSM_DISABLE	0
 #define DRV_SPI_SSM_ENABLE	1
+
+/*
+ * SPI states
+ */
+#define DRV_STATE_SPI_READY		0 // Can send and receive data
+#define DRV_STATE_SPI_BUSY_RX	1 // Busy receiving data => can't receive more data at the moment
+#define DRV_STATE_SPI_BUSY_TX	2 // Busy sending data => can't send more data at the moment
 
 /* ---------------------- APIs supported ---------------------- */
 
@@ -91,6 +103,9 @@ uint8_t SPI_SR_Status( SPI_Def_t *p_SPI_struct, uint8_t bitPosition);
  */
 void SPI_SendData( SPI_Def_t *p_SPI_struct, uint8_t *p_TxBuffer, uint32_t length );
 void SPI_ReceiveData( SPI_Def_t *p_SPI_struct, uint8_t *p_RxBuffer, uint32_t length );
+uint8_t SPI_SendDataIRQ( SPI_Handle_t *p_SPI_struct, uint8_t *p_TxBuffer, uint32_t length );
+uint8_t SPI_ReceiveDataIRQ( SPI_Handle_t *p_SPI_struct, uint8_t *p_RxBuffer, uint32_t length );
+
 
 /*
  * Enable or Disable SPI peripheral

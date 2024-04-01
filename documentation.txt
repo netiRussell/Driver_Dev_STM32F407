@@ -258,6 +258,70 @@
  
  
  /*********************************************************************
+ * @fn						- SPI_SendData
+ *
+ * @brief					- Loads data byte by byte to the DR register of SPI 
+ *
+ * @param[SPI_Def_t]		- Pointer to the address of the SPI peripheral
+ * @param[p_TxBuffer]		- Pointer to a variable that holds data to be sent
+ * @param[length]			- length of that data
+ *
+ * @return            		- none
+ *
+ * @Note             		- After you send data, you must use SPI_ReceiveData before you send new data. This way overrun error is avoided
+ *
+ */
+ 
+ 
+ /*********************************************************************
+ * @fn						- SPI_ReceiveData
+ *
+ * @brief					- Reads data byte by byte from the DR register of SPI 
+ *
+ * @param[SPI_Def_t]		- Pointer to the address of the SPI peripheral
+ * @param[p_RxBuffer]		- Pointer to a variable where received data will be stored
+ * @param[length]			- length of that data
+ *
+ * @return            		- none
+ *
+ * @Note             		- none
+ *
+ */
+ 
+ 
+ /*********************************************************************
+ * @fn						- SPI_SendDataIRQ
+ *
+ * @brief					- Saves buffer and data to and changes current state of SPI in SPI_Handle_t, enables corresponding interrupts on the peripheral's end 
+ *
+ * @param[SPI_Handle_t]		- Pointer to the address of the SPI handle 
+ * @param[p_TxBuffer]		- Pointer to a variable that holds data to be sent
+ * @param[length]			- length of that data
+ *
+ * @return[uint8_t]			- SPI status (custom property, no direct connection to the hardware)
+ *
+ * @Note             		- none
+ *
+ */
+ 
+ 
+ /*********************************************************************
+ * @fn						- SPI_ReceiveDataIRQ
+ *
+ * @brief					- Saves buffer and data to and changes current state of SPI in SPI_Handle_t, enables corresponding interrupts on the peripheral's end
+ *
+ * @param[SPI_Handle_t]		- Pointer to the address of the SPI handle 
+ * @param[p_RxBuffer]		- Pointer to a variable that holds data to be sent
+ * @param[length]			- length of that data
+ *
+ * @return[uint8_t]			- SPI status (custom property, no direct connection to the hardware)
+ *
+ * @Note					- none
+ *
+ */
+ 
+ 
+ /*********************************************************************
  * @fn						- SPI_ClkControl
  *
  * @brief             		- Enables or disables peripheral clock for the given SPI address

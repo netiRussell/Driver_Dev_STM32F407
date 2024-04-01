@@ -99,13 +99,17 @@
 /*
  * IRQ numbers ---------------------------------------------------------
  */
-#define DRV_IRQ_NUM_EXTI0 6
-#define DRV_IRQ_NUM_EXTI1 7
-#define DRV_IRQ_NUM_EXTI2 8
-#define DRV_IRQ_NUM_EXTI3 9
-#define DRV_IRQ_NUM_EXTI4 10
-#define DRV_IRQ_NUM_EXTI9_5 23
-#define DRV_IRQ_NUM_EXTI15_10 40
+#define DRV_IRQ_NUM_EXTI0		6
+#define DRV_IRQ_NUM_EXTI1		7
+#define DRV_IRQ_NUM_EXTI2		8
+#define DRV_IRQ_NUM_EXTI3		9
+#define DRV_IRQ_NUM_EXTI4		10
+#define DRV_IRQ_NUM_EXTI9_5		23
+#define DRV_IRQ_NUM_EXTI15_10	40
+
+#define DRV_IRQ_NUM_SPI1	35
+#define DRV_IRQ_NUM_SPI2	36
+#define DRV_IRQ_NUM_SPI3	51
 
 
 /*
