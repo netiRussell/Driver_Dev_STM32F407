@@ -17,10 +17,12 @@
 #include <stdint.h>
 
 
+
 /*
  * General use macros ---------------------------------------------------
  */
 #define __vo volatile
+#define __weak __attribute__((weak))
 #define SET 1
 #define RESET 0
 #define ENABLE SET
@@ -28,6 +30,7 @@
 #define HIGH SET
 #define LOW RESET
 #define NVIC_NUM_PRIOR_BITS 4
+
 
 
 /*
@@ -38,6 +41,7 @@
 #define DRV_NVIC_ISER	((__vo uint32_t*) 0xE000E100)	// set-enable; ends at 0xE000E11C
 #define DRV_NVIC_ICER	((__vo uint32_t*) 0XE000E180)	// clear-enable; ends at 0xE000E19C
 #define DRV_NVIC_IPR	((__vo uint32_t*) 0xE000E400)	// priority; ends at 0xE000E4EF
+
 
 
 /*
@@ -96,6 +100,7 @@
 #define DRV_GPIOK_BASEADDR (DRV_AHB1_BASEADDR + 0x2800U)
 
 
+
 /*
  * IRQ numbers ---------------------------------------------------------
  */
@@ -111,50 +116,6 @@
 #define DRV_IRQ_NUM_SPI2	36
 #define DRV_IRQ_NUM_SPI3	51
 
-
-/*
- * Bit-position macros for CR1 register of SPI -------------------------
- */
-#define DRV_BITPOS_SPI_CR1_BIDIMODE		15
-#define DRV_BITPOS_SPI_CR1_BIDIOE		14
-#define DRV_BITPOS_SPI_CR1_CRCEN		13
-#define DRV_BITPOS_SPI_CR1_CRCNEXT		12
-#define DRV_BITPOS_SPI_CR1_DFF			11
-#define DRV_BITPOS_SPI_CR1_RXONLY		10
-#define DRV_BITPOS_SPI_CR1_SSM			9
-#define DRV_BITPOS_SPI_CR1_SSI			8
-#define DRV_BITPOS_SPI_CR1_LSBFIRST		7
-#define DRV_BITPOS_SPI_CR1_SPE			6
-#define DRV_BITPOS_SPI_CR1_BR			3
-#define DRV_BITPOS_SPI_CR1_MSTR			2
-#define DRV_BITPOS_SPI_CR1_CPOL			1
-#define DRV_BITPOS_SPI_CR1_CPHA			0
-
-
-/*
- * Bit-position macros for CR2 register of SPI -------------------------
- */
-#define DRV_BITPOS_SPI_CR2_TXEIE			7
-#define DRV_BITPOS_SPI_CR2_RXNEIE			6
-#define DRV_BITPOS_SPI_CR2_ERRIE			5
-#define DRV_BITPOS_SPI_CR2_FRF				4
-#define DRV_BITPOS_SPI_CR2_SSOE				2
-#define DRV_BITPOS_SPI_CR2_TXDMAEN			1
-#define DRV_BITPOS_SPI_CR2_RXDMAEN			0
-
-
-/*
- * Bit-position macros for SR register of SPI -------------------------
- */
-#define DRV_BITPOS_SPI_SR_FRE			8
-#define DRV_BITPOS_SPI_SR_BSY			7
-#define DRV_BITPOS_SPI_SR_OVR			6
-#define DRV_BITPOS_SPI_SR_MODF			5
-#define DRV_BITPOS_SPI_SR_CRCERR		4
-#define DRV_BITPOS_SPI_SR_UDR			3
-#define DRV_BITPOS_SPI_SR_CHSIDE		2
-#define DRV_BITPOS_SPI_SR_TXE			1
-#define DRV_BITPOS_SPI_SR_RXNE			0
 
 
 /*
@@ -244,7 +205,7 @@ typedef struct{
 
 #define SYSCFG ((SYSCFG_Def_t*) DRV_SYSCFG_BASEADDR)
 
-
+/* SPI registers structure */
 typedef struct {
 	uint32_t CR1;		// Control configurations 1
 	uint32_t CR2;		// Control configurations 2
@@ -261,6 +222,25 @@ typedef struct {
 #define SPI2 ((SPI_Def_t*)  DRV_SPI2_BASEADDR)
 #define SPI3 ((SPI_Def_t*)  DRV_SPI3_BASEADDR)
 #define SPI4 ((SPI_Def_t*)  DRV_SPI4_BASEADDR)
+
+/* I2C registers structure */
+typedef struct {
+	uint32_t CR1;		// Control configurations 1
+	uint32_t CR2;		// Control configurations 1
+	uint32_t OAR1;	// Own address 1
+	uint32_t OAR2;	// Own address 2
+	uint32_t DR;		// Data
+	uint32_t SR1;		// Status 1
+	uint32_t SR2;		// Status 2
+	uint32_t CCR;		// Clock control
+	uint32_t TRISE;	// Maximum rise time in Fm/Sm mode (Master mode)
+	uint32_t FLTR;	// AC and DC noise filters configurations
+} I2C_Def_t;
+
+#define I2C1 ((I2C_Def_t*) DRV_I2C1_BASEADDR)
+#define I2C2 ((I2C_Def_t*) DRV_I2C2_BASEADDR)
+#define I2C3 ((I2C_Def_t*) DRV_I2C3_BASEADDR)
+
 
 
 /*
@@ -306,6 +286,11 @@ typedef struct {
 #define DRVF_SYSCFG_CLK_EN ( DRV_RCC->APB2ENR |= (0b1 << 14) )
 
 
+
+/*
+ * Disable macros ----------------------------------------------------
+ */
+
 /* Clock disable macros for GPIO */
 #define DRVF_GPIOx_PCLK_DI(bitNumToSet) ( DRV_RCC->AHB1ENR &= ~0b1 << bitNumToSet )
 #define DRVF_GPIOA_PCLK_DI ( DRV_RCC->AHB1ENR &= ~0b1 )
@@ -320,9 +305,9 @@ typedef struct {
 
 
 /* Clock disable macros for I2C */
-#define DRVF_I2C1_CLK_EN ( DRV_RCC->APB1ENR |= (0b1 << 21) )
-#define DRVF_I2C2_CLK_EN ( DRV_RCC->APB1ENR |= (0b1 << 22) )
-#define DRVF_I2C3_CLK_EN ( DRV_RCC->APB1ENR |= (0b1 << 23) )
+#define DRVF_I2C1_CLK_DI ( DRV_RCC->APB1ENR |= (0b1 << 21) )
+#define DRVF_I2C2_CLK_DI ( DRV_RCC->APB1ENR |= (0b1 << 22) )
+#define DRVF_I2C3_CLK_DI ( DRV_RCC->APB1ENR |= (0b1 << 23) )
 
 
 /* Clock disable macros for SPI */
@@ -343,6 +328,98 @@ typedef struct {
 
 /* Clock disable macros for SYSCFG */
 #define DRVF_SYSCFG_CLK_DI ( DRV_RCC->APB2ENR &= ~(0b1 << 14) )
+
+
+
+/*
+ * Bit-position ---------------------------------------------------------
+ */
+
+/* SPI */
+#define DRV_BITPOS_SPI_CR1_BIDIMODE	15
+#define DRV_BITPOS_SPI_CR1_BIDIOE		14
+#define DRV_BITPOS_SPI_CR1_CRCEN		13
+#define DRV_BITPOS_SPI_CR1_CRCNEXT	12
+#define DRV_BITPOS_SPI_CR1_DFF			11
+#define DRV_BITPOS_SPI_CR1_RXONLY		10
+#define DRV_BITPOS_SPI_CR1_SSM			9
+#define DRV_BITPOS_SPI_CR1_SSI			8
+#define DRV_BITPOS_SPI_CR1_LSBFIRST	7
+#define DRV_BITPOS_SPI_CR1_SPE			6
+#define DRV_BITPOS_SPI_CR1_BR				3
+#define DRV_BITPOS_SPI_CR1_MSTR			2
+#define DRV_BITPOS_SPI_CR1_CPOL			1
+#define DRV_BITPOS_SPI_CR1_CPHA			0
+
+#define DRV_BITPOS_SPI_CR2_TXEIE			7
+#define DRV_BITPOS_SPI_CR2_RXNEIE			6
+#define DRV_BITPOS_SPI_CR2_ERRIE			5
+#define DRV_BITPOS_SPI_CR2_FRF				4
+#define DRV_BITPOS_SPI_CR2_SSOE				2
+#define DRV_BITPOS_SPI_CR2_TXDMAEN		1
+#define DRV_BITPOS_SPI_CR2_RXDMAEN		0
+
+#define DRV_BITPOS_SPI_SR_FRE			8
+#define DRV_BITPOS_SPI_SR_BSY			7
+#define DRV_BITPOS_SPI_SR_OVR			6
+#define DRV_BITPOS_SPI_SR_MODF		5
+#define DRV_BITPOS_SPI_SR_CRCERR	4
+#define DRV_BITPOS_SPI_SR_UDR			3
+#define DRV_BITPOS_SPI_SR_CHSIDE	2
+#define DRV_BITPOS_SPI_SR_TXE			1
+#define DRV_BITPOS_SPI_SR_RXNE		0
+
+
+/* I2C */
+#define DRV_BITPOS_I2C_CR1_SWRST		15
+#define DRV_BITPOS_I2C_CR1_ALERT		14
+#define DRV_BITPOS_I2C_CR1_PEC			12
+#define DRV_BITPOS_I2C_CR1_POS			11
+#define DRV_BITPOS_I2C_CR1_ACK			10
+#define DRV_BITPOS_I2C_CR1_STOP			9
+#define DRV_BITPOS_I2C_CR1_START		8
+#define DRV_BITPOS_I2C_CR1_NOSTR		7
+#define DRV_BITPOS_I2C_CR1_ENGC			6
+#define DRV_BITPOS_I2C_CR1_ENPEC		5
+#define DRV_BITPOS_I2C_CR1_ENARP		4
+#define DRV_BITPOS_I2C_CR1_SMBTYPE	3
+#define DRV_BITPOS_I2C_CR1_SMBUS		1
+#define DRV_BITPOS_I2C_CR1_PE				0
+
+#define DRV_BITPOS_I2C_CR2_LAST			12
+#define DRV_BITPOS_I2C_CR2_DMAEN		11
+#define DRV_BITPOS_I2C_CR2_ITBUFEN	10
+#define DRV_BITPOS_I2C_CR2_ITEVTEN	9
+#define DRV_BITPOS_I2C_CR2_ITERREN	8
+#define DRV_BITPOS_I2C_CR2_FREQ			0
+
+#define DRV_BITPOS_I2C_SR1_SMBALERT	15
+#define DRV_BITPOS_I2C_SR1_TIMEOUT	14
+#define DRV_BITPOS_I2C_SR1_PECERR		12
+#define DRV_BITPOS_I2C_SR1_OVR			11
+#define DRV_BITPOS_I2C_SR1_AF				10
+#define DRV_BITPOS_I2C_SR1_ARLO			9
+#define DRV_BITPOS_I2C_SR1_BERR			8
+#define DRV_BITPOS_I2C_SR1_TxE			7
+#define DRV_BITPOS_I2C_SR1_RxNE			6
+#define DRV_BITPOS_I2C_SR1_STOPF		4
+#define DRV_BITPOS_I2C_SR1_ADD10		3
+#define DRV_BITPOS_I2C_SR1_BTF			2
+#define DRV_BITPOS_I2C_SR1_ADDR			1
+#define DRV_BITPOS_I2C_SR1_SB				0
+
+#define DRV_BITPOS_I2C_SR2_PEC				8
+#define DRV_BITPOS_I2C_SR2_DUALF			7
+#define DRV_BITPOS_I2C_SR2_SMBHOST		6
+#define DRV_BITPOS_I2C_SR2_SMBDEFAULT	5
+#define DRV_BITPOS_I2C_SR2_GENCALL		4
+#define DRV_BITPOS_I2C_SR2_TRA				2
+#define DRV_BITPOS_I2C_SR2_BUSY				1
+#define DRV_BITPOS_I2C_SR2_MSL				0
+
+#define DRV_BITPOS_I2C_CCR_FS		15
+#define DRV_BITPOS_I2C_CCR_DUTY	14
+#define DRV_BITPOS_I2C_CCR_CCR	0
 
 #endif /* INC_STM32F407_H_ */
 

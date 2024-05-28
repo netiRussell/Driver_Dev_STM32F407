@@ -21,6 +21,7 @@ typedef struct {
 	uint32_t TxLen;
 	uint32_t RxLen;
 	uint8_t State;
+	uint8_t DFF;
 } SPI_Handle_t;
 
 
@@ -80,6 +81,13 @@ typedef struct {
 #define DRV_STATE_SPI_BUSY_RX	1 // Busy receiving data => can't receive more data at the moment
 #define DRV_STATE_SPI_BUSY_TX	2 // Busy sending data => can't send more data at the moment
 
+/*
+ * SPI Application Events
+ */
+#define DRV_EVENT_SPI_TX_CMPLT	1
+#define DRV_EVENT_SPI_RX_CMPLT	2
+#define DRV_EVENT_SPI_OVR_ERR	3
+
 /* ---------------------- APIs supported ---------------------- */
 
 /*
@@ -129,6 +137,11 @@ uint8_t SPI_getIrqNum(uint8_t pinNumber);
 void SPI_IrqInterruptConfig(uint8_t IrqNumber, uint8_t ControlType);
 void SPI_IrqPriorityConfig(uint8_t IrqNumber, uint8_t IrqPriority);
 void SPI_IrqHandling(SPI_Handle_t* p_SPI_Handle);
+
+/*
+ * Event callback
+ */
+void SPI_ApplicationEventCallback(SPI_Handle_t* p_SPI_Handle, uint8_t event);
 
 
 

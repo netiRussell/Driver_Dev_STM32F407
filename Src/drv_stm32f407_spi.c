@@ -1,5 +1,76 @@
 #include "drv_stm32f407_spi.h"
 
+/*
+ * Functions-helpers. Created to be used by software only. Non-API.
+ */
+
+static void SPI_TXE_IRQ_Handler( SPI_Handle_t *p_SPI_Handle_t ){
+
+	// Check Data format and load the appropriate protion to the SPI->DR register
+	if (p_SPI_Handle_t->DFF) {
+		//16 bits DFF
+		p_SPI_Handle_t->p_SPI_struct->DR = *((uint16_t*) p_SPI_Handle_t->p_TxBuffer);
+		p_SPI_Handle_t->TxLen -= 2;
+		(uint16_t*) p_SPI_Handle_t->p_TxBuffer++;
+	} else {
+		//8 bits DFF
+		p_SPI_Handle_t->p_SPI_struct->DR = *(p_SPI_Handle_t->p_TxBuffer);
+		p_SPI_Handle_t->TxLen -= 1;
+		p_SPI_Handle_t->p_TxBuffer++;
+	}
+
+	// Check if there is no more data to send
+	if( p_SPI_Handle_t->TxLen < 1 ){
+		// Turn off the interrupt. Change SPI state
+		p_SPI_Handle_t->p_SPI_struct->CR2 &= ~(0b1 << DRV_BITPOS_SPI_CR2_TXEIE);
+		p_SPI_Handle_t->State = DRV_STATE_SPI_READY;
+
+		SPI_ApplicationEventCallback( p_SPI_Handle_t, DRV_EVENT_SPI_TX_CMPLT );
+	}
+
+}
+
+static void SPI_RXNE_IRQ_Handler( SPI_Handle_t *p_SPI_Handle_t ){
+
+	// Check Data format and load the appropriate protion to the SPI->DR register
+	if ( p_SPI_Handle_t->DFF ) {
+		//16 bits DFF
+		*((uint16_t*) p_SPI_Handle_t->p_RxBuffer) = p_SPI_Handle_t->p_SPI_struct->DR;
+		p_SPI_Handle_t->RxLen -= 2;
+		(uint16_t*) p_SPI_Handle_t->p_RxBuffer++;
+	} else {
+		//8 bits DFF
+		*(p_SPI_Handle_t->p_RxBuffer) = p_SPI_Handle_t->p_SPI_struct->DR;
+		p_SPI_Handle_t->RxLen -= 1;
+		p_SPI_Handle_t->p_RxBuffer++;
+	}
+
+	// Check if there is no more data to send
+	if (p_SPI_Handle_t->RxLen < 1) {
+		// Turn off the interrupt. Change SPI state
+		p_SPI_Handle_t->p_SPI_struct->CR2 &= ~(0b1 << DRV_BITPOS_SPI_CR2_RXNEIE);
+		p_SPI_Handle_t->State = DRV_STATE_SPI_READY;
+
+		SPI_ApplicationEventCallback(p_SPI_Handle_t, DRV_EVENT_SPI_RX_CMPLT);
+	}
+
+}
+
+static void SPI_OVR_IRQ_Handler( SPI_Handle_t *p_SPI_Handle_t ){
+
+	// Clear the OVR flag
+	if( p_SPI_Handle_t->State != DRV_STATE_SPI_BUSY_TX ){
+		uint8_t dummy = p_SPI_Handle_t->p_SPI_struct->DR;
+		dummy = p_SPI_Handle_t->p_SPI_struct->SR;
+		(void)dummy;
+	}
+
+	SPI_ApplicationEventCallback(p_SPI_Handle_t, DRV_EVENT_SPI_OVR_ERR);
+
+}
+
+// ----------------------------------------------------------------------------
+
 
 /*
  * Initialization and De-initialization
@@ -51,7 +122,6 @@ void SPI_Init(SPI_Handle_t *p_SPI_Handle_t){
 
 
 // !!! TO BE IMPLEMENTED: CR1_BIDIOE for half duplex and CR1_SSI for determing Slave status
-
 void SPI_DeInit(SPI_Def_t *p_SPI_struct){
 
 }
@@ -106,7 +176,7 @@ void SPI_SendData( SPI_Def_t *p_SPI_struct, uint8_t *p_TxBuffer, uint32_t length
 
 	while (length > 0) {
 		// Wait until TX buffer becomes empty
-		while (!SPI_SR_Status(p_SPI_struct, DRV_BITPOS_SPI_SR_TXE)); // ! SUBSTITUTE WITH INTERRUPT
+		while (!SPI_SR_Status(p_SPI_struct, DRV_BITPOS_SPI_SR_TXE));
 
 		if (SPI_SR_Status(p_SPI_struct, DRV_BITPOS_SPI_CR1_DFF)) {
 			//16 bits DFF
@@ -128,7 +198,7 @@ void SPI_ReceiveData( SPI_Def_t *p_SPI_struct, uint8_t *p_RxBuffer, uint32_t len
 	while( length > 0){
 
 		// Wait until Rx buffer becomes non-empty
-		while( !SPI_SR_Status(p_SPI_struct, DRV_BITPOS_SPI_SR_RXNE) ); // ! SUBSTITUTE WITH INTERRUPT
+		while( !SPI_SR_Status(p_SPI_struct, DRV_BITPOS_SPI_SR_RXNE) );
 
 		if (SPI_SR_Status(p_SPI_struct, DRV_BITPOS_SPI_CR1_DFF)) {
 			//16 bits DFF
@@ -146,44 +216,46 @@ void SPI_ReceiveData( SPI_Def_t *p_SPI_struct, uint8_t *p_RxBuffer, uint32_t len
 
 }
 
-uint8_t SPI_SendDataIRQ( SPI_Handle_t *p_SPI_handle, uint8_t *p_TxBuffer, uint32_t length ){
+uint8_t SPI_SendDataIRQ( SPI_Handle_t *p_SPI_Handle_t, uint8_t *p_TxBuffer, uint32_t length ){
 
-	if( p_SPI_handle->State == DRV_STATE_SPI_BUSY_TX){
-		return p_SPI_handle->State;
+	if( p_SPI_Handle_t->State == DRV_STATE_SPI_BUSY_TX){
+		return p_SPI_Handle_t->State;
 	}
 
 	// Save Tx buffer adress and data length information
-	p_SPI_handle->p_TxBuffer = p_TxBuffer; // data to be sent
-	p_SPI_handle->TxLen = length; // length of that data
+	p_SPI_Handle_t->p_TxBuffer = p_TxBuffer; // data to be sent
+	p_SPI_Handle_t->TxLen = length; // length of that data
+	p_SPI_Handle_t->DFF = SPI_SR_Status(p_SPI_Handle_t->p_SPI_struct, DRV_BITPOS_SPI_CR1_DFF); // length of each portion
 
 	// Change SPI state
-	p_SPI_handle->State = DRV_STATE_SPI_BUSY_TX;
+	p_SPI_Handle_t->State = DRV_STATE_SPI_BUSY_TX;
 
 	// Enable the TXEIE control bit to generate interrupt whenever TXE flag is set in SR
-	p_SPI_handle->p_SPI_struct->CR2 |= 0b1 << DRV_BITPOS_SPI_CR2_TXEIE;
+	p_SPI_Handle_t->p_SPI_struct->CR2 |= 0b1 << DRV_BITPOS_SPI_CR2_TXEIE;
 
 	// ! Data transmission is handled by the ISR
-	return p_SPI_handle->State;
+	return p_SPI_Handle_t->State;
 }
 
-uint8_t SPI_ReceiveDataIRQ( SPI_Handle_t *p_SPI_handle, uint8_t *p_RxBuffer, uint32_t length ){
+uint8_t SPI_ReceiveDataIRQ( SPI_Handle_t *p_SPI_Handle_t, uint8_t *p_RxBuffer, uint32_t length ){
 
-	if (p_SPI_handle->State == DRV_STATE_SPI_BUSY_RX) {
-		return p_SPI_handle->State;
+	if (p_SPI_Handle_t->State == DRV_STATE_SPI_BUSY_RX) {
+		return p_SPI_Handle_t->State;
 	}
 
 	// Save Rx buffer adress and data length information
-	p_SPI_handle->p_RxBuffer = p_RxBuffer; // variable where the received data will be saved
-	p_SPI_handle->RxLen = length; // length of the data to be received
+	p_SPI_Handle_t->p_RxBuffer = p_RxBuffer; // variable where the received data will be saved
+	p_SPI_Handle_t->RxLen = length; // length of the data to be received
+	p_SPI_Handle_t->DFF = SPI_SR_Status(p_SPI_Handle_t->p_SPI_struct, DRV_BITPOS_SPI_CR1_DFF); // length of each portion
 
 	// Change SPI state
-	p_SPI_handle->State = DRV_STATE_SPI_BUSY_RX;
+	p_SPI_Handle_t->State = DRV_STATE_SPI_BUSY_RX;
 
 	// Enable the RXNEIE control bit to generate interrupt whenever RXNE flag is set in SR
-	p_SPI_handle->p_SPI_struct->CR2 |= 0b1 << DRV_BITPOS_SPI_CR2_RXNEIE;
+	p_SPI_Handle_t->p_SPI_struct->CR2 |= 0b1 << DRV_BITPOS_SPI_CR2_RXNEIE;
 
 	// ! Data transmission is handled by the ISR
-	return p_SPI_handle->State;
+	return p_SPI_Handle_t->State;
 
 }
 
@@ -223,20 +295,15 @@ void SPI_SSOEControl( SPI_Def_t *p_SPI_struct, uint8_t ControlType ){
 /*
  * IRQ configuration and ISR handling
  */
-uint8_t SPI_getIrqNum(uint8_t pinNumber){
-
-	return 0;
-}
-
 void SPI_IrqInterruptConfig(uint8_t IrqNumber, uint8_t ControlType){
 	// Enable or Disable functionality
 	uint8_t registerNumber = IrqNumber / 32; // corresponding number(0-7) for ISER or ICER
 	IrqNumber = IrqNumber % 32; // corresponding bit position
 
 	if (ControlType == ENABLE) {
-		*( DRV_NVIC_ISER + (4 * registerNumber)) |= 0b1 << IrqNumber;
+		*( DRV_NVIC_ISER + registerNumber) |= 0b1 << IrqNumber;
 	} else {
-		*( DRV_NVIC_ICER + (4 * registerNumber)) |= 0b1 << IrqNumber;
+		*( DRV_NVIC_ICER + registerNumber) |= 0b1 << IrqNumber;
 	}
 }
 
@@ -252,8 +319,33 @@ void SPI_IrqPriorityConfig(uint8_t IrqNumber, uint8_t IrqPriority){
 	*( DRV_NVIC_IPR + (registerNumber)) |= (uint32_t) IrqPriority << IrqNumber; // set the bits
 }
 
-void SPI_IrqHandling(SPI_Handle_t* p_SPI_Handle){
+void SPI_IrqHandling(SPI_Handle_t* p_SPI_Handle_t){
+	// Check what caused the interrupt
+	uint8_t conditionTXE = p_SPI_Handle_t->p_SPI_struct->SR & (0b1 << DRV_BITPOS_SPI_SR_TXE);
+	uint8_t conditionRXNE = p_SPI_Handle_t->p_SPI_struct->SR & (0b1 << DRV_BITPOS_SPI_SR_RXNE);
+	uint8_t conditionOVR = p_SPI_Handle_t->p_SPI_struct->SR & (0b1 << DRV_BITPOS_SPI_SR_OVR);
 
+	if( conditionTXE && p_SPI_Handle_t->State == DRV_STATE_SPI_BUSY_TX){
+		// TXE = 1 => Tx is ready to be written to
+		SPI_TXE_IRQ_Handler( p_SPI_Handle_t);
+	}
+
+	if( conditionRXNE && p_SPI_Handle_t->State == DRV_STATE_SPI_BUSY_RX ){
+		// RXNE = 1 => Rx is ready to be read
+		SPI_RXNE_IRQ_Handler( p_SPI_Handle_t);
+	}
+
+	if( conditionOVR && p_SPI_Handle_t->p_SPI_struct->CR2 & (0b1 << DRV_BITPOS_SPI_CR2_ERRIE) ){
+		// RXNE = 1 => Rx is ready to be read
+		SPI_OVR_IRQ_Handler( p_SPI_Handle_t);
+	}
+}
+
+/*
+ * Event callback(a function meant to be used after some other function is used. In this case, after SPI_IrqHandling finished its execution)
+ */
+__weak void SPI_ApplicationEventCallback(SPI_Handle_t* p_SPI_Handle_t, uint8_t event){
+	// To be overridden by the user. This is strictly an API function.
 }
 
 

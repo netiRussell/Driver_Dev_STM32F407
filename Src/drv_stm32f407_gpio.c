@@ -23,17 +23,17 @@ void GPIO_Init(GPIO_Handle_t *p_GPIOxHandle){
 		p_GPIOxHandle->p_GPIOx->MODER |= DRV_GPIO_MODE_IN << (pinNumber*2);
 
 		// 1.2. Set the trigger configuration
-		if( p_GPIOxHandle->GPIOx_PinConfig.pinMode == DRV_GPIO_MODE_IT_FT ){
+		if( p_GPIOxHandle->GPIOx_PinConfig.pinMode == DRV_GPIO_MODE_IRQ_FT ){
 			// falling edge trigger
 			EXTI->RTSR &= ~(0b1 << pinNumber); // clear RTS
 			EXTI->FTSR |= 0b1 << pinNumber; // set FTS
 
-		} else if( p_GPIOxHandle->GPIOx_PinConfig.pinMode == DRV_GPIO_MODE_IT_RT ){
+		} else if( p_GPIOxHandle->GPIOx_PinConfig.pinMode == DRV_GPIO_MODE_IRQ_RT ){
 			// rising edge trigger
 			EXTI->FTSR &= ~(0b1 << pinNumber); // clear FTS
 			EXTI->RTSR |= 0b1 << pinNumber; // set RTS
 
-		} else if( p_GPIOxHandle->GPIOx_PinConfig.pinMode == DRV_GPIO_MODE_IT_RFT ) {
+		} else if( p_GPIOxHandle->GPIOx_PinConfig.pinMode == DRV_GPIO_MODE_IRQ_RFT ) {
 			// both triggers
 			EXTI->FTSR |= 0b1 << pinNumber; // set FTS
 			EXTI->RTSR |= 0b1 << pinNumber; // set RTS
@@ -163,9 +163,9 @@ void GPIO_IrqInterruptConfig(uint8_t IrqNumber, uint8_t ControlType){
 	IrqNumber = IrqNumber % 32; // corresponding bit position
 
 	if(ControlType == ENABLE){
-		*( DRV_NVIC_ISER+(4*registerNumber) ) |= 0b1 << IrqNumber;
+		*( DRV_NVIC_ISER+registerNumber ) |= 0b1 << IrqNumber;
 	} else{
-		*( DRV_NVIC_ICER+(4*registerNumber) ) |= 0b1 << IrqNumber;
+		*( DRV_NVIC_ICER+registerNumber ) |= 0b1 << IrqNumber;
 	}
 
 }

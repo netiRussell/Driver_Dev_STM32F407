@@ -30,9 +30,9 @@ typedef struct {
 #define DRV_GPIO_MODE_OUT 		1
 #define DRV_GPIO_MODE_ALTFN 	2
 #define DRV_GPIO_MODE_ANALOG 	3
-#define DRV_GPIO_MODE_IT_FT 	4 	// Interrupt for Falling edge
-#define DRV_GPIO_MODE_IT_RT 	5 	// Interrupt for Rising edge
-#define DRV_GPIO_MODE_IT_RFT 	6	// Interrupt for Rising & Falling edges
+#define DRV_GPIO_MODE_IRQ_FT 	4 	// Interrupt for Falling edge
+#define DRV_GPIO_MODE_IRQ_RT 	5 	// Interrupt for Rising edge
+#define DRV_GPIO_MODE_IRQ_RFT 	6	// Interrupt for Rising & Falling edges
 
 
 /*
